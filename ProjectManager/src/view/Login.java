@@ -75,13 +75,13 @@ public class Login {
 		frmProjectManager.getContentPane().add(lblNewLabel_2);
 
 		usernameTextField = new JTextField();
-		usernameTextField.setFont(new Font("High Tower Text", Font.PLAIN, 12));
+		usernameTextField.setFont(new Font("High Tower Text", Font.PLAIN, 19));
 		usernameTextField.setBounds(577, 184, 200, 25);
 		frmProjectManager.getContentPane().add(usernameTextField);
 		usernameTextField.setColumns(10);
 
 		passwordField = new JPasswordField();
-		passwordField.setFont(new Font("High Tower Text", Font.PLAIN, 12));
+		passwordField.setFont(new Font("High Tower Text", Font.PLAIN, 19));
 		passwordField.setBounds(577, 244, 200, 25);
 		frmProjectManager.getContentPane().add(passwordField);
 

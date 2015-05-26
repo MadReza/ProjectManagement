@@ -94,7 +94,7 @@ public class ProjectManagerUI extends JFrame {
 		
 		projectTemplate = createTemplate();
 		homeTabPanel.add(projectTemplate);
-		JButton newButton = new JButton(new ImageIcon("C:\\Users\\StephnyO\\Documents\\workspace\\ProjectManager4\\Images\\addProject.png"));
+		JButton newButton = new JButton(new ImageIcon("Images\\addProject.png"));
 		newButton.setToolTipText("Select to create a new project");
 		newButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {

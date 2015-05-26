@@ -9,7 +9,7 @@ public class DatabaseConnection {
 	public static Connection dbConnector() {
 		try {
 			Class.forName("org.sqlite.JDBC");
-			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:C:\\Users\\StephnyO\\Documents\\workspace\\ProjectManager4\\PMDatabase.sqlite");
+			Connection dbConnection = DriverManager.getConnection("jdbc:sqlite:PMDatabase.sqlite");
 		//	JOptionPane.showMessageDialog(null, "Connection successful!");
 			return dbConnection;
 		} 
