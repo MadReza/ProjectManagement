@@ -92,8 +92,8 @@ public class Database {
 				"CREATE TABLE IF NOT EXISTS PreReqActivities (activityID INTEGER NOT NULL, preReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
 						+ " REFERENCES Activities(ID) ON DELETE CASCADE, FOREIGN KEY(preReqID) REFERENCES Activities(ID) ON DELETE CASCADE);",
 
-			/*	"CREATE TRIGGER IF NOT EXISTS DeleteProject BEFORE DELETE ON Projects BEGIN DELETE FROM Activities WHERE ID IN "
-						+ "(SELECT activityID FROM Activities WHERE ParentProjectID = OLD.ID); END;" */
+				"CREATE TRIGGER IF NOT EXISTS DeleteProject BEFORE DELETE ON Projects BEGIN DELETE FROM Activities WHERE ID IN "
+						+ "(SELECT ID FROM Activities WHERE projectID = OLD.ID); END;" 
 		};
 
 		try {
