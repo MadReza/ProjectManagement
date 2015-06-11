@@ -10,20 +10,21 @@ public class Activity {
 	private String name, description;
 	private int ID,parentProjectID;
 	private double budget;
-	private String finishDate, startDate;	
+	private String finishDate, startDate, duration;	
 	private Status status;							// ENUM class
 	private ArrayList <Activity> preReq;			// list of prerequisite activities
 	private ArrayList <Activity> successors;		// list of Activities that depend on this Activity
 	//	private ArrayList <Member> activityTeam;		// members who are assigned to this activity        			next Iteration
 
-	protected Activity (int ID,int parentProjectID, String name, String description, double budget, String startDate, String finishDate, Status status) throws Exception {
+	protected Activity (int ID,int parentProjectID, String name, String description, double budget, String duration, Status status) throws Exception {
 		this.ID = ID;
 		this.parentProjectID = parentProjectID;
 		setName(name);
 		setDescription(description);
 		setBudget(budget);
-		setStartDate(startDate);
-		setFinishDate(finishDate);
+		setDuration(duration);
+		//setStartDate(startDate);
+		//setFinishDate(finishDate);
 		setStatus(Status.LOCKED);				// any activity is locked by default until checking its prerequisites are finished
 	}
 	
@@ -38,7 +39,7 @@ public class Activity {
 	public String getDescription() {
 		return description;
 	}
-
+	
 	public void setDescription(String description) {
 		this.description = description;
 	}
@@ -97,6 +98,14 @@ public class Activity {
 		this.finishDate = finishDate;
 	}
 
+	public void setDuration(String duration)
+	{
+		this.duration = duration;
+	}
+	
+	public String getDuration(){
+		return duration;
+	}
 
 	public Status getStatus() {
 		return status;

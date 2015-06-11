@@ -7,7 +7,7 @@ public class Member {
 	private String name, email, role, username, userPassword;
 	private int userID;
 
-	protected Member(String name, String email,String role, String username, String userPassword) {
+	protected Member(String name, String email, String role, String username, String userPassword) {
 		this.name = name;
 		this.email = email;
 		this.role = role;
@@ -26,7 +26,6 @@ public class Member {
 	protected String getRole() {
 		return role;
 	}
-
 
 	protected String getUsername() {
 		return username;

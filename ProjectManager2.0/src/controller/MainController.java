@@ -43,7 +43,6 @@ public class MainController {
 	public MainController (MainModel aModel, MainView aView) {
 		mainModel = aModel;
 		mainView = aView;
-
 		addListeners();
 	}
 
@@ -129,7 +128,7 @@ public class MainController {
 	public boolean isFormReady() {
 		int isReady = 0;
 		if(!mainModel.isProjectNameValid(currentUser,mainView.getStartupView().getAppView().getName()))
-			isReady = 4;
+			isReady = 5;
 		else 
 			isReady = mainView.getStartupView().getAppView().isJobFormReady();
 
@@ -139,7 +138,7 @@ public class MainController {
 			return false;
 
 		case 1:
-			JOptionPane.showMessageDialog(null, "Finish Date can't percede Start Date");
+			JOptionPane.showMessageDialog(null, "Finish Date can't precede Start Date");
 			return false;
 
 		case 2:
@@ -150,9 +149,11 @@ public class MainController {
 			JOptionPane.showMessageDialog(null, "Status can't be Finished while Finish Date is yet to come, Change the Finish Date or Change Status");
 			return false;
 		case 4: 
+			JOptionPane.showMessageDialog(null, "You entered an invalid budget");
+			return false;
+		case 5: 
 			JOptionPane.showMessageDialog(null, "You are currenty managing another project with the same name! Choose a different name.");
 			return false;
-
 		}
 		return true;
 	}
@@ -248,7 +249,6 @@ public class MainController {
 				//Create and save a new Project  (Edit Mode = FALSE)
 				boolean editMode = mainView.getStartupView().getAppView().getProjectPanel().getEditProjectMode();
 				if (!editMode) {
-					//	if(!mainView.getStartupView().getAppView().startInPast()) {
 					try {
 						mainModel.addProjectToDatabase(currentUser, name, description, status, budget, startDate, endDate);
 
@@ -258,12 +258,8 @@ public class MainController {
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+				}
 
-				}
-				/*		else
-						JOptionPane.showMessageDialog(null, "The Selected date is in the past!");
-				}
-				 */
 				//Update and save an existing project (Edit Mode = TRUE)
 				else {
 					try {
@@ -276,7 +272,6 @@ public class MainController {
 					} catch (Exception e) {
 						JOptionPane.showMessageDialog(null, "Error Occured. Please Try Again!");
 					}
-
 				}
 				mainView.getStartupView().getAppView().clearForm(); 
 				mainView.getStartupView().getAppView().displayWelcomePanel();
@@ -337,11 +332,11 @@ public class MainController {
 			mainView.getStartupView().getAppView().setEditMode(true);
 			mainView.getStartupView().getAppView().getProjectPanel().setEditProjectMode(true); //set editMode ON
 			mainView.getStartupView().getAppView().createEditProjectForm(currentProject);
-			
+
 		}
 	}
 
-	
+
 	/**
 	 * Implements DeleteProjectListener.
 	 *
@@ -368,9 +363,7 @@ public class MainController {
 		public void itemStateChanged(ItemEvent e) {
 			Activity activity = (Activity) e.getItem();
 			System.out.println("Selected prereq :" + activity.getID() + " - " + activity.getName());
-
 		}
-
 	}
 	 */
 
@@ -404,25 +397,28 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent event){
 
+
 			mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setVisible(true);
 			try{
 				int pID = mainModel.getCurrentProject().getID();
 				String name = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityNameField();
 				String description = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityDescription();
 				double budget = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getBudget();
+				String duration = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityDuration();
 				String status = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityChoice();
-				String startDate = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getStartDate();
-				String endDate = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEndDate();
+				/*String startDate = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getStartDate();
+				String endDate = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEndDate();*/
+				
 
 
-				if( name.isEmpty() || description.isEmpty() || startDate.isEmpty()|| endDate.isEmpty()) {		
+				if( name.isEmpty() || description.isEmpty() || duration.isEmpty()) {		
 					JOptionPane.showMessageDialog(null, "Complete all fields");
 				}
 
 				boolean editMode = mainView.getStartupView().getAppView().getProjectPanel().getEditActivityMode();
 				if (!editMode) {
 					try {
-						mainModel.addActivityToDatabase(pID, name, description,budget, startDate, endDate, status, getActivityTable());
+						mainModel.addActivityToDatabase(pID, name, description,budget, duration, status, getActivityTable());
 						JOptionPane.showMessageDialog(null, "Activity created sucessfully");
 						mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
 					} catch (Exception e) {
@@ -433,7 +429,7 @@ public class MainController {
 				//Update and save an existing activity (Edit Mode = TRUE)
 				else {
 					try {
-						mainModel.updateActivityInDatabase(name, description, budget, startDate, endDate,status);
+						mainModel.updateActivityInDatabase(name, description, budget, duration,status);
 						mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(false);	
 						mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
 					} catch (Exception e) {
@@ -445,7 +441,8 @@ public class MainController {
 				JOptionPane.showMessageDialog(null, e);
 			}
 			updateProjectDisplay();
-		}	}
+		}
+	}
 
 
 	/**
@@ -485,8 +482,8 @@ public class MainController {
 			}
 		}
 	}
-	
-	
-	
+
+
+
 }
 
