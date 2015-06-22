@@ -102,6 +102,7 @@ public class MainController {
 		mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().addSaveActivityListener(new SaveActivityListener());
 		mainView.getStartupView().getAppView().getProjectPanel().addEditActivityListener(new EditActivityListener());
 		mainView.getStartupView().getAppView().getProjectPanel().addDeleteActivityListener(new DeleteActivityListener());
+		mainView.getStartupView().getAppView().getProjectPanel().addChoosePrereqsListener(new ChoosePrereqsListener());
 	}
 
 	/**
@@ -483,6 +484,20 @@ public class MainController {
 		}
 	}
 
+	
+	/**
+	 * Implements a listener to choose prerequistes for a selected activity.
+	 */
+	private class ChoosePrereqsListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); 
+			//Implement method to set the tables accordingly --- doing this next
+			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();
+			
+		}
+		
+	}
 
 
 }

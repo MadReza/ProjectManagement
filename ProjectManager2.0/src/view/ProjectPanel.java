@@ -2,6 +2,7 @@ package view;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -10,7 +11,9 @@ import javax.swing.JPanel;
 
 
 
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.JTable;
 import javax.swing.SwingConstants;
 
 import java.awt.*;
@@ -22,17 +25,18 @@ import model.Project;
 
 @SuppressWarnings("serial")
 public class ProjectPanel extends JPanel {
-
-	private JTextField nameTextField, budgetTextField;
+	
 	private JPanel projectTabPanel, projectForm;
+	private JTextField nameTextField, budgetTextField;
 	private DisplayPanel displayPanel;
 	private JTextArea descriptionArea;
 	private JComboBox<String> statusCombo;
-	private JButton addActivityButton, deleteProjectButton, editProjectButton, addMemberButton, 
+	private JButton addActivityButton, deleteProjectButton, editProjectButton, choosePrereqsButton, addMemberButton, 
 			addGantChartButton, evaluateCPAButton, pertButton, earnedValueButton,editActivityButton,deleteActivityButton ;
-
 	private ActivityFrame activityFrame;
-	
+	private JFrame prereqSelectionFrame;
+	private JTable availableActivities, chosenPrereqs;
+		
 	private boolean editProjectMode = false;
 	private boolean editActivitytMode = false;
 
@@ -95,6 +99,10 @@ public class ProjectPanel extends JPanel {
 		deleteActivityButton.setToolTipText("Delete an activity");
 		deleteActivityButton.setBounds(214, 228, 60, 60);
 		projectTabPanel.add(deleteActivityButton);
+		
+		choosePrereqsButton = new JButton("Choose Prereqs");
+		choosePrereqsButton.setBounds(20, 288, 89, 23);
+		projectTabPanel.add(choosePrereqsButton);
 
 		JLabel lblAdditionalFeatures = new JLabel("Additional Features");
 		lblAdditionalFeatures.setFont(new Font("High Tower Text", Font.ITALIC, 18));
@@ -131,7 +139,6 @@ public class ProjectPanel extends JPanel {
 		statusCombo.setSelectedIndex(def);
 	}
 	
-
 	public void setEditProjectMode(boolean mode) {
 		editProjectMode = mode;
 	}
@@ -193,7 +200,70 @@ public class ProjectPanel extends JPanel {
 		displayPanel.updateProjectInfo(name, progress, startDate, endDate, description, budget);
 	}
 	
-	//ADDED THIS : TO PASS the updated list of activities to the drop down prereq menu!
+	public void createPrereqsTable() {
+		
+		final JFrame selectionFrame = new JFrame();
+		selectionFrame.setTitle("Choose prerequistes");
+		selectionFrame.setBounds(100, 100, 465, 356);
+		selectionFrame.getContentPane().setLayout(null);
+		selectionFrame.setVisible(true);
+		
+		JScrollPane scrollPaneActs = new JScrollPane();
+		scrollPaneActs.setBounds(20, 37, 154, 224);
+		selectionFrame.getContentPane().add(scrollPaneActs);
+		
+		availableActivities = new JTable();
+		scrollPaneActs.setViewportView(availableActivities);
+		
+		JScrollPane scrollPanePrereqs = new JScrollPane();
+		scrollPanePrereqs.setBounds(268, 37, 154, 224);
+		selectionFrame.getContentPane().add(scrollPanePrereqs);
+		
+		chosenPrereqs = new JTable();
+		scrollPanePrereqs.setViewportView(chosenPrereqs);
+		
+		JButton addPrerqsButton = new JButton(">>");
+		addPrerqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
+		addPrerqsButton.setBounds(196, 87, 51, 35);
+		selectionFrame.getContentPane().add(addPrerqsButton);
+		
+		JButton RemovePrereqsButton = new JButton("<<");
+		RemovePrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
+		RemovePrereqsButton.setBounds(196, 147, 51, 35);
+		selectionFrame.getContentPane().add(RemovePrereqsButton);
+		
+		JLabel lblNewLabel = new JLabel("Available Activities");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setFont(new Font("High Tower Text", Font.PLAIN, 16));
+		lblNewLabel.setBounds(22, 11, 152, 21);
+		selectionFrame.getContentPane().add(lblNewLabel);
+		
+		JLabel lblSelectedPrerequistes = new JLabel("Selected Prerequistes");
+		lblSelectedPrerequistes.setHorizontalAlignment(SwingConstants.CENTER);
+		lblSelectedPrerequistes.setFont(new Font("High Tower Text", Font.PLAIN, 16));
+		lblSelectedPrerequistes.setBounds(272, 11, 152, 21);
+		selectionFrame.getContentPane().add(lblSelectedPrerequistes);
+		
+		JButton savePrereqsButton = new JButton("Save");
+		savePrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
+		savePrereqsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			}
+		});
+		savePrereqsButton.setBounds(121, 292, 89, 23);
+		selectionFrame.getContentPane().add(savePrereqsButton);
+		
+		JButton cancelPrereqsButton = new JButton("Cancel");
+		cancelPrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
+		cancelPrereqsButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				selectionFrame.dispose();
+			}
+		});
+		cancelPrereqsButton.setBounds(227, 292, 89, 23);
+		selectionFrame.getContentPane().add(cancelPrereqsButton);		
+	}
+	
 	public void addNewActivityListener(ActionListener listener) {
 		addActivityButton.addActionListener(listener);
 	}
@@ -206,17 +276,18 @@ public class ProjectPanel extends JPanel {
 		deleteProjectButton.addActionListener(listener);
 	}
 
-	// adding an action listener to the edit activity button
-	public void addEditActivityListener(ActionListener editActivityListener){
-		editActivityButton.addActionListener(editActivityListener);
+	public void addEditActivityListener(ActionListener listener) {
+		editActivityButton.addActionListener(listener);
 	}
 
-	// adding an action listener to the delete activity button
-	public void addDeleteActivityListener(ActionListener deleteActivityListener){
-		deleteActivityButton.addActionListener(deleteActivityListener);
+	public void addDeleteActivityListener(ActionListener listener) {
+		deleteActivityButton.addActionListener(listener);
 	}
-
-
+	
+	public void addChoosePrereqsListener(ActionListener listener) {
+		choosePrereqsButton.addActionListener(listener);
+	}
+	
 }
 
 
