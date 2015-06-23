@@ -22,8 +22,9 @@ public class DisplayPanel extends JPanel {
 	private JLabel budget;
 	private JTable activityTable;
 
-	
-	
+
+
+
 	/**
 	 * Create the main Display panel.
 	 */
@@ -86,13 +87,13 @@ public class DisplayPanel extends JPanel {
 		endDate.setFont(new Font("High Tower Text", Font.PLAIN, 17));
 		endDate.setBounds(91, 122, 150, 22);
 		projectDisplayPanel.add(endDate);
-		
+
 		lblCurrentBudget = new JLabel("Current budget : $");
 		lblCurrentBudget.setForeground(Color.WHITE);
 		lblCurrentBudget.setFont(new Font("High Tower Text", Font.PLAIN, 17));
 		lblCurrentBudget.setBounds(23, 155, 126, 22);
 		projectDisplayPanel.add(lblCurrentBudget);
-		
+
 		budget = new JLabel("budget");
 		budget.setForeground(Color.WHITE);
 		budget.setFont(new Font("High Tower Text", Font.PLAIN, 20));
@@ -104,7 +105,7 @@ public class DisplayPanel extends JPanel {
 		activityDisplayPanel.setBounds(0, 189, 800, 359);
 		add(activityDisplayPanel);
 		activityDisplayPanel.setLayout(null);
-		
+
 		activityTable = new JTable();
 		activityTable.setBounds(53, 65, 200, 266);
 		activityDisplayPanel.add(activityTable);
@@ -112,7 +113,7 @@ public class DisplayPanel extends JPanel {
 		activityTable.setFont(new Font("High Tower Text", Font.PLAIN, 22));
 		activityTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		activityDisplayPanel.add(activityTable);
-		
+
 		JLabel lblActivityList = new JLabel("Activity List");
 		lblActivityList.setForeground(Color.WHITE);
 		lblActivityList.setFont(new Font("High Tower Text", Font.BOLD, 34));
@@ -121,21 +122,20 @@ public class DisplayPanel extends JPanel {
 		setVisible(true);
 	}
 
-	
-	
+
+
 	public JTable getActivityTable() {
 		return activityTable;
 	}
-	
-	
+
+
 	public String getSelectedActivity() {
 		int row = activityTable.getSelectedRow();
 		int column = activityTable.getSelectedColumn();
 		return activityTable.getValueAt(row,column).toString();
 	}
 
-	
-	
+
 	/**
 	 * Updates values of attributes according to the project currently viewed.
 	 * @param name

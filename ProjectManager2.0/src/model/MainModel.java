@@ -226,18 +226,19 @@ public class MainModel {
 	 * @param endDate
 	 * @param status
 	 */
-	public void addActivityToDatabase(int parentID, String name, String description,double budget, String duration ,String status, JTable table) throws Exception {
+	public void addActivityToDatabase(int parentID, String name, String description, double budget, int duration, int ES, int EF,
+			int LS, int LF, String status, JTable table) throws Exception {
 		int activityCounter = 0;
 		Status statusEnum = Status.valueOf(status.toUpperCase());
 
 		try {
 			activityCounter = database.getIndexOfLastAddedActivity();
-			database.addActivity( parentID, name, description,budget, duration ,status);
+			database.addActivity(parentID, name, description, budget, duration, ES, EF, LS, LF, status);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		int ID = activityCounter + 1;	
-		currentActivity = new Activity(parentID, ID, name, description, budget, duration, statusEnum);
+		currentActivity = new Activity(parentID, ID, name, description, budget, duration, ES, EF, LS, LF, statusEnum);
 
 		System.out.println("created Project object.: Project ID" + currentProject.getID());
 
@@ -253,14 +254,15 @@ public class MainModel {
 	 * @param status
 	 * @throws Exception
 	 */
-	public void updateActivityInDatabase(String name, String description, double budget,  String duration,String status) throws Exception {
+	public void updateActivityInDatabase(String name, String description, double budget,  int duration, int ES, int EF,
+			int LS, int LF, String status) throws Exception {
 
 		Status statusEnum = Status.valueOf(status.toUpperCase());
 		int ID = currentActivity.getID();
 		int parentProjectID = currentActivity.getParentProjectID();
-		Activity activity = new Activity(ID, parentProjectID, name, description, budget, duration, statusEnum); //Set currentProject to the created project
+		Activity activity = new Activity(ID, parentProjectID, name, description, budget, duration, ES, EF, LS, LS, statusEnum); //Set currentProject to the created project
 
-		database.updateActivity(ID,name, description, budget, duration,status);
+		database.updateActivity(ID,name, description, budget, duration, ES, EF, LS, LS, status);
 		System.out.println("Updated Activity.");
 		setCurrentActivity(activity); //update currentActivity
 
@@ -324,37 +326,5 @@ public class MainModel {
 	protected Activity getActivityByID(int aID) throws Exception {
 		return getAllActivities().get(aID);
 	}
-
-	/*private boolean ActivitySuitsProject(int aID, int pID, String message) throws Exception {
-
-		Activity activity = getActivityByID(aID);
-		Project project = getProjectByID(pID);
-
-
-		// checks prerequisites
-		if (! activity.getPreReq().isEmpty() ){
-			message = "Adjust: The activity has prerequisites";
-			return false;
-			}
-
-		// checks successors
-		 if(! activity.getSuccessors().isEmpty() ) {
-			 message = "Adjust: The activity has successors";
-			 return false;
-		 }
-
-		// Check dates boundaries  already checked in the constructors
-		if (activity.getStartDate().compareTo(project.getStartDate()) < 0) {
-			message = "Adjust: the Activity can't precede its parent project";
-			return false;
-			}
-
-		if (activity.getEndDate().compareTo(project.getEndDate()) > 0) {
-			message = "Adjust: the Activity Finish date can't follow its parent project Finish date";
-			return false;
-			}
-		// otherwise
-		return true;
-	}*/
 
 }

@@ -55,17 +55,17 @@ public class ProjectPanel extends JPanel {
 
 		deleteProjectButton = new JButton(new ImageIcon("Images\\trash.png"));
 		deleteProjectButton.setToolTipText("Delete current project");
-		deleteProjectButton.setBounds(20, 80, 60, 60);
+		deleteProjectButton.setBounds(20, 67, 60, 60);
 		projectTabPanel.add(deleteProjectButton);
 
 		editProjectButton = new JButton(new ImageIcon("Images\\edit_project.png"));
 		editProjectButton.setToolTipText("Edit project");
-		editProjectButton.setBounds(117, 80, 60, 60);
+		editProjectButton.setBounds(117, 67, 60, 60);
 		projectTabPanel.add(editProjectButton);
 
 		addMemberButton = new JButton(new ImageIcon("Images\\add_members.png"));
 		addMemberButton.setToolTipText("Add members to a project");
-		addMemberButton.setBounds(214, 80, 60, 60);
+		addMemberButton.setBounds(214, 67, 60, 60);
 		projectTabPanel.add(addMemberButton);
 
 		JSeparator separator_1 = new JSeparator();
@@ -75,7 +75,7 @@ public class ProjectPanel extends JPanel {
 
 		JLabel lblActivityOptions = new JLabel("Activity Options");
 		lblActivityOptions.setFont(new Font("High Tower Text", Font.ITALIC, 18));
-		lblActivityOptions.setBounds(20, 179, 131, 30);
+		lblActivityOptions.setBounds(20, 153, 131, 30);
 		projectTabPanel.add(lblActivityOptions);
 
 		activityFrame = new ActivityFrame();
@@ -87,46 +87,47 @@ public class ProjectPanel extends JPanel {
 				activityFrame.clearForm();
 			}
 		});
-		addActivityButton.setBounds(20, 228, 60, 60);
+		addActivityButton.setBounds(20, 194, 60, 60);
 		projectTabPanel.add(addActivityButton);
 
 		editActivityButton = new JButton(new ImageIcon("Images\\editActivity.png"));
 		editActivityButton.setToolTipText("Edit an activity");
-		editActivityButton.setBounds(117, 228, 60, 60);
+		editActivityButton.setBounds(117, 194, 60, 60);
 		projectTabPanel.add(editActivityButton);
 
 		deleteActivityButton = new JButton(new ImageIcon("Images\\deleteActivity.png"));
 		deleteActivityButton.setToolTipText("Delete an activity");
-		deleteActivityButton.setBounds(214, 228, 60, 60);
+		deleteActivityButton.setBounds(214, 194, 60, 60);
 		projectTabPanel.add(deleteActivityButton);
 		
-		choosePrereqsButton = new JButton("Choose Prereqs");
-		choosePrereqsButton.setBounds(20, 288, 89, 23);
+		choosePrereqsButton = new JButton(new ImageIcon("Images\\prerequisites.png"));
+		choosePrereqsButton.setToolTipText("Add or remove prerequisite activities");
+		choosePrereqsButton.setBounds(20, 282, 60, 60);
 		projectTabPanel.add(choosePrereqsButton);
 
 		JLabel lblAdditionalFeatures = new JLabel("Additional Features");
 		lblAdditionalFeatures.setFont(new Font("High Tower Text", Font.ITALIC, 18));
-		lblAdditionalFeatures.setBounds(20, 336, 154, 30);
+		lblAdditionalFeatures.setBounds(20, 367, 154, 30);
 		projectTabPanel.add(lblAdditionalFeatures);
 
 		addGantChartButton = new JButton(new ImageIcon("Images\\add_chart.png"));
 		addGantChartButton.setToolTipText("Display Gant chart");
-		addGantChartButton.setBounds(20, 383, 60, 60);
+		addGantChartButton.setBounds(20, 408, 60, 60);
 		projectTabPanel.add(addGantChartButton);
 
 		evaluateCPAButton = new JButton(new ImageIcon("Images\\cpmicon.png"));
 		evaluateCPAButton.setToolTipText("Evaluate a critical path");
-		evaluateCPAButton.setBounds(117, 383, 60, 60);
+		evaluateCPAButton.setBounds(117, 408, 60, 60);
 		projectTabPanel.add(evaluateCPAButton);
 
 		pertButton = new JButton(new ImageIcon("Images\\PERT.png"));
 		pertButton.setToolTipText("Perform PERT analysis");
-		pertButton.setBounds(214, 383, 60, 60);
+		pertButton.setBounds(214, 408, 60, 60);
 		projectTabPanel.add(pertButton);
 
 		earnedValueButton = new JButton(new ImageIcon("Images\\earned-value.png"));
 		earnedValueButton.setToolTipText("Perform earned value analysis");
-		earnedValueButton.setBounds(20, 471, 60, 60);
+		earnedValueButton.setBounds(20, 496, 60, 60);
 		projectTabPanel.add(earnedValueButton);
 
 		displayPanel = new DisplayPanel();
@@ -287,7 +288,6 @@ public class ProjectPanel extends JPanel {
 	public void addChoosePrereqsListener(ActionListener listener) {
 		choosePrereqsButton.addActionListener(listener);
 	}
-	
 }
 
 
