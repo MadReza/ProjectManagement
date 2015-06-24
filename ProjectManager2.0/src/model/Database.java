@@ -89,14 +89,14 @@ public class Database {
 						+ "Status TEXT, Budget DOUBLE, StartDate TEXT, EndDate TEXT);" ,
 
 
-				"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT,projectID INTEGER NOT NULL, Name TEXT,"
+				"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT, ProjectID INTEGER NOT NULL, Name TEXT,"
 						+ "Description TEXT, Budget DOUBLE, Duration INTEGER, EarliestStart INTEGER, EarliestFinish INTEGER, LatestStart INTEGER, LatestFinish INTEGER, Status TEXT);",
 
-				"CREATE TABLE IF NOT EXISTS PreReqActivities (activityID INTEGER NOT NULL, preReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
+				"CREATE TABLE IF NOT EXISTS PrereqActivities (ActivityID INTEGER NOT NULL, PrereqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
 						+ " REFERENCES Activities(ID) ON DELETE CASCADE, FOREIGN KEY(preReqID) REFERENCES Activities(ID) ON DELETE CASCADE);",
 
 				"CREATE TRIGGER IF NOT EXISTS DeleteProject BEFORE DELETE ON Projects BEGIN DELETE FROM Activities WHERE ID IN "
-						+ "(SELECT ID FROM Activities WHERE projectID = OLD.ID); END;" 
+						+ "(SELECT ID FROM Activities WHERE ProjectID = OLD.ID); END;" 
 		};
 
 		try {
@@ -444,7 +444,7 @@ public class Database {
 
 		try {
 
-			String query = "INSERT INTO Activities (projectID,Name,Description,Budget,Duration,EarliestStart,EarliestFinish,LatestStart,LatestFinish,Status) VALUES (?,?,?,?,?,?,?,?,?,?);"; 
+			String query = "INSERT INTO Activities (ProjectID,Name,Description,Budget,Duration,EarliestStart,EarliestFinish,LatestStart,LatestFinish,Status) VALUES (?,?,?,?,?,?,?,?,?,?);"; 
 
 			prepStatement = connection.prepareStatement(query);
 			prepStatement.setInt(1, projectID);
@@ -536,6 +536,30 @@ public class Database {
 		}
 	}
 
+	protected void associateActivityWithPrerequisites(int selectedActivityID, ArrayList<Activity> prereqs) {
+			try {
+				for(Activity activity : prereqs) {
+					String query = "INSERT INTO PrereqActivities (ActivityID, PrereqID) VALUES (?,?);";
+					prepStatement = connection.prepareStatement(query);
+					prepStatement.setInt(1, selectedActivityID);
+					prepStatement.setInt(2, activity.getID());
+
+					prepStatement.addBatch();
+				}
+				prepStatement.executeBatch();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} 
+		}
+	
+	protected void deleteAssociatedPrerequisites(int selectedActivityID) {
+		String query = "DELETE FROM PrereqActivities WHERE ActivityID = " +  selectedActivityID + ";";
+		try {
+			statement.executeUpdate(query);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Retrieves all activities for the current project from the database.
@@ -602,7 +626,7 @@ public class Database {
 		String query = " SELECT ID FROM Activities WHERE (ProjectID = " + projectID +
 				" AND ID != " + selectedActivityID + ")" +
 				" EXCEPT " +
-				" SELECT PreReqID FROM PreReqActivities WHERE ActivityID = " + selectedActivityID + " ;" ;
+				" SELECT PrereqID FROM PrereqActivities WHERE ActivityID = " + selectedActivityID + " ;" ;
 
 		results = statement.executeQuery(query);
 
@@ -622,12 +646,12 @@ public class Database {
 	protected ArrayList<Integer> getSelectedPrereqs(int selectedActivityID) throws Exception {
 		
 		ArrayList<Integer> selectedPrereqIDs = new ArrayList<Integer>();
-		String query = "SELECT PreReqID FROM PreReqActivities WHERE ActivityID = '" + selectedActivityID + "';" ;
+		String query = "SELECT PreReqID FROM PrereqActivities WHERE ActivityID = '" + selectedActivityID + "';" ;
 		
 		results = statement.executeQuery(query);
 
 		while(results.next()) {
-			selectedPrereqIDs.add(results.getInt("PreReqID"));	
+			selectedPrereqIDs.add(results.getInt("PrereqID"));	
 		}
 		return selectedPrereqIDs;	
 	}

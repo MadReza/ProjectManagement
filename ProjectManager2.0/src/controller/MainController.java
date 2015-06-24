@@ -79,6 +79,15 @@ public class MainController {
 	private JTable getProjectTable() {
 		return mainView.getStartupView().getAppView().getProjectTable();
 	}
+	
+	/**
+	 * Returns the activity Frame from the ProjectPanel
+	 * @return
+	 */
+	private ActivityFrame getActivityFrame() {
+		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
+	}
+	
 
 	/**
 	 * Returns the activity Table from DisplayPanel.
@@ -89,13 +98,12 @@ public class MainController {
 	}
 
 	/**
-	 * Returns the activity Frame from the ProjectPanel
-	 * @return
+	 * Returns the name of the activity selected from the table in the DisplayPanel.
+	 * @return selected activity name
 	 */
-	private ActivityFrame getActivityFrame() {
-		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
+	private String getSelectedActivityName() {
+		return mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity();
 	}
-
 
 	private JList<Activity> getAvailableActivitiesTable() {
 		return mainView.getStartupView().getAppView().getProjectPanel().getAvailableActivitiesList();
@@ -121,6 +129,7 @@ public class MainController {
 		mainView.getStartupView().getAppView().getProjectPanel().addEditActivityListener(new EditActivityListener());
 		mainView.getStartupView().getAppView().getProjectPanel().addDeleteActivityListener(new DeleteActivityListener());
 		mainView.getStartupView().getAppView().getProjectPanel().addChoosePrereqsListener(new ChoosePrereqsListener());
+		mainView.getStartupView().getAppView().getProjectPanel().addSavePrereqsListener(new SavePrereqsListener());
 	}
 
 
@@ -425,7 +434,7 @@ public class MainController {
 	 */
 	private class DeleteProjectListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent e) {
+		public void actionPerformed(ActionEvent event) {
 			int confirm = JOptionPane.showConfirmDialog(null, "Confirm Delete.", "Delete", JOptionPane.OK_CANCEL_OPTION);
 			if (confirm == 0) {
 				mainModel.deleteProjectFromDatabase(currentProject);			
@@ -543,7 +552,7 @@ public class MainController {
 	 */
 	private class DeleteActivityListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent event) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); //get selected item from activityTable.
 			setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
 			int confirm = JOptionPane.showConfirmDialog(null, "Confirm Delete.", "Delete", JOptionPane.OK_CANCEL_OPTION);
@@ -555,27 +564,29 @@ public class MainController {
 		}
 	}
 
-	/*	private class PrereqComboBoxListener implements ItemListener {
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		Activity activity = (Activity) e.getItem();
-		System.out.println("Selected prereq :" + activity.getID() + " - " + activity.getName());
-	}
-}
-	 */
-
 	/**
 	 * Implements a listener to choose prerequisites for a selected activity.
 	 */
 	private class ChoosePrereqsListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent arg0) {
+		public void actionPerformed(ActionEvent event) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); 
-			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();	
+			mainView.getStartupView().getAppView().getProjectPanel().displayPrereqsFrame();	
 			updatePrereqTable(selectedActivityName); 
 		}		
 	}
 
+	
+	private class SavePrereqsListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			ArrayList<Activity> selectedPrereqs = mainView.getStartupView().getAppView().getProjectPanel().getSelectedPrereqs();
+			mainModel.associateActivityWithPrerequisites(getSelectedActivityName(), selectedPrereqs);
+			mainView.getStartupView().getAppView().getProjectPanel().disposePrereqsFrame();
+			
+		}
+		
+	}
 
 
 }

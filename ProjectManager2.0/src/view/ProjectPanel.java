@@ -41,7 +41,7 @@ public class ProjectPanel extends JPanel {
 	private DisplayPanel displayPanel;
 	private JTextArea descriptionArea;
 	private JComboBox<String> statusCombo;
-	private JButton addActivityButton, deleteProjectButton, editProjectButton, choosePrereqsButton,savePrereqsButton, addMemberButton, 
+	private JButton addActivityButton, deleteProjectButton, editProjectButton, choosePrereqsButton, savePrereqsButton, addMemberButton, 
 	addGantChartButton, evaluateCPAButton, pertButton, earnedValueButton,editActivityButton,deleteActivityButton ;
 
 	private JList<Activity> availableActivities, chosenPrereqs;
@@ -144,6 +144,8 @@ public class ProjectPanel extends JPanel {
 		displayPanel = new DisplayPanel();
 		displayPanel.setBackground(new Color(169, 169, 169));
 		projectTabPanel.add(displayPanel);
+		
+		createPrereqsFrame();
 
 	}
 
@@ -207,7 +209,7 @@ public class ProjectPanel extends JPanel {
 		return chosenPrereqs;
 	}
 
-	public ArrayList<Activity> getChosenPrereqs() {
+	public ArrayList<Activity> getSelectedPrereqs() {
 		ArrayList<Activity> prereqs = new ArrayList<Activity>();
 		if(!chosenModel.isEmpty()) {
 			for(int i = 0; i < chosenModel.size(); i++) {
@@ -215,9 +217,15 @@ public class ProjectPanel extends JPanel {
 				System.out.println("chosen : " + chosenModel.getElementAt(i).getName());
 			}
 		}
-		else
-			JOptionPane.showMessageDialog(null,"Please select at least one prerequisite.");
 		return prereqs;
+	}
+	
+	public void displayPrereqsFrame() {
+		prereqSelectionFrame.setVisible(true);	
+	}
+	
+	public void disposePrereqsFrame() {
+		prereqSelectionFrame.dispose();
 	}
 
 	//Display details according to the project currently opened.
@@ -233,13 +241,13 @@ public class ProjectPanel extends JPanel {
 		displayPanel.updateProjectInfo(name, progress, startDate, endDate, description, budget);
 	}
 
-	public void createPrereqsTable() {
+	private void createPrereqsFrame() {
 
 		prereqSelectionFrame = new JFrame();
 		prereqSelectionFrame.setTitle("Choose prerequistes");
 		prereqSelectionFrame.setBounds(100, 100, 465, 356);
 		prereqSelectionFrame.getContentPane().setLayout(null);
-		prereqSelectionFrame.setVisible(true);
+		prereqSelectionFrame.setVisible(false);
 		prereqSelectionFrame.setResizable(false);
 
 		JScrollPane scrollPaneActs = new JScrollPane();
@@ -301,7 +309,7 @@ public class ProjectPanel extends JPanel {
 		cancelPrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
 		cancelPrereqsButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
-				prereqSelectionFrame.dispose();
+				disposePrereqsFrame();
 			}
 		});
 		cancelPrereqsButton.setBounds(227, 292, 89, 23);
@@ -374,8 +382,11 @@ public class ProjectPanel extends JPanel {
 		savePrereqsButton.addActionListener(listener);
 	}
 
-
-	public class PreReqListCellRenderer extends DefaultListCellRenderer {
+	/**
+	 * Customises the content of an object that is to be displayed in lists 
+	 * used in the Choose Prerequisite frame.
+	 */
+	private class PreReqListCellRenderer extends DefaultListCellRenderer {
 		public Component getListCellRendererComponent(JList<?> list,
 				Object value,
 				int index,
@@ -389,6 +400,8 @@ public class ProjectPanel extends JPanel {
 			return this;
 		}
 	}
+
+	
 
 
 }

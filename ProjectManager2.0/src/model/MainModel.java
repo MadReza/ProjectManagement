@@ -281,6 +281,19 @@ public class MainModel {
 		setCurrentActivity(null);
 	}
 
+	
+	/**
+	 * Associate a selected activity with chosen prerequisites.
+	 * @param selectedActivity
+	 * @param prereqs
+	 */
+	public void associateActivityWithPrerequisites(String selectedActivity, ArrayList<Activity> prereqs) {
+		int selectedActivityID = getActivityByName(selectedActivity).getID();
+		database.deleteAssociatedPrerequisites(selectedActivityID);
+		if(!prereqs.isEmpty())
+			database.associateActivityWithPrerequisites(selectedActivityID, prereqs);
+		
+	}
 
 	/**
 	 * Returns the set of all activities for the project currently being viewed.
