@@ -215,7 +215,7 @@ public class ProjectPanel extends JPanel {
 			for(int i = 0; i < chosenModel.size(); i++) {
 				prereqs.add(chosenModel.getElementAt(i));
 				System.out.println("chosen : " + chosenModel.getElementAt(i).getName());
-			}
+			} 
 		}
 		return prereqs;
 	}

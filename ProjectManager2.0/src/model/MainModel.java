@@ -290,9 +290,11 @@ public class MainModel {
 	public void associateActivityWithPrerequisites(String selectedActivity, ArrayList<Activity> prereqs) {
 		int selectedActivityID = getActivityByName(selectedActivity).getID();
 		database.deleteAssociatedPrerequisites(selectedActivityID);
-		if(!prereqs.isEmpty())
-			database.associateActivityWithPrerequisites(selectedActivityID, prereqs);
-		
+		if(!prereqs.isEmpty()) {
+			for(Activity activity : prereqs) {
+				database.associateActivityWithPrerequisites(selectedActivityID, activity.getID());
+			}
+		}
 	}
 
 	/**

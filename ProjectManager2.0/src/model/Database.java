@@ -536,18 +536,16 @@ public class Database {
 		}
 	}
 
-	protected void associateActivityWithPrerequisites(int selectedActivityID, ArrayList<Activity> prereqs) {
+	protected void associateActivityWithPrerequisites(int selectedActivityID, int prereqID) {
 			try {
-				for(Activity activity : prereqs) {
 					String query = "INSERT INTO PrereqActivities (ActivityID, PrereqID) VALUES (?,?);";
 					prepStatement = connection.prepareStatement(query);
 					prepStatement.setInt(1, selectedActivityID);
-					prepStatement.setInt(2, activity.getID());
+					prepStatement.setInt(2, prereqID);
 
-					prepStatement.addBatch();
+					prepStatement.executeUpdate();
 				}
-				prepStatement.executeBatch();
-			} catch (SQLException e) {
+				catch (SQLException e) {
 				e.printStackTrace();
 			} 
 		}
