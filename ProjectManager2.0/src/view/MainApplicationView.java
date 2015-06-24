@@ -92,21 +92,7 @@ public class MainApplicationView extends JPanel {
 	public void setBudget(JTextField budgetTextField) {
 		this.budgetTextField = budgetTextField;
 	}
-	/*public String getStartDate() {
-		return textStartDate.getText();
-	}
-
-	public void setStartDate(JTextField textStartDate) {
-		this.textStartDate = textStartDate;
-	}
-
-	public String getEndDate() {
-		return textEndDate.getText();
-	}
-
-	public void setEndDate(JTextField textEndDate) {
-		this.textEndDate = textEndDate;
-	}*/
+	
 	public String getStartDate() {
 		return  startDateModel.getValue().toString();
 	}
@@ -161,7 +147,7 @@ public class MainApplicationView extends JPanel {
 	public void setEditMode(boolean state) {
 		this.editMode = state;
 	}
-
+	
 	public String getSelectedProject() {
 		int row = projectTable.getSelectedRow();
 		int column = projectTable.getSelectedColumn();
@@ -376,20 +362,7 @@ public class MainApplicationView extends JPanel {
 		endDatePicker = new JDatePickerImpl(endDatePanel, new DateLabelFormatter());
 		endDatePicker.setBounds(535, 357, 180, 35);
 		projectFormPanel.add(endDatePicker);
-		/*textStartDate = new JTextField();
-		textStartDate.setText(" ");
-		textStartDate.setBounds(195, 357, 180, 35);
-		textStartDate.setColumns(10);
-		textStartDate.setText("12-12-2015");
-		projectFormPanel.add(textStartDate);
-
-		textEndDate = new JTextField();
-		textEndDate.setText(" ");
-		textEndDate.setColumns(10);
-		textEndDate.setBounds(535, 357, 180, 35);
-		textEndDate.setText("13-12-2015");
-		projectFormPanel.add(textEndDate);*/
-
+		
 		saveProjectButton = new JButton("Save");
 		saveProjectButton.setBounds(514, 454, 106, 46); 
 		saveProjectButton.setFont(new Font("High Tower Text", Font.PLAIN, 22));
@@ -471,9 +444,6 @@ public class MainApplicationView extends JPanel {
 		textFieldName.setText("");
 		textArea.setText("");
 		budgetTextField.setText("");
-		/*textStartDate.setText("");
-		textEndDate.setText("");*/
-
 		Calendar calendar = Calendar.getInstance();
 		startDateModel.setValue(calendar.getTime());
 		endDateModel.setValue(calendar.getTime());
@@ -523,12 +493,8 @@ public class MainApplicationView extends JPanel {
 		projectFormLabel.setText("Edit Project");
 		textFieldName.setText(project.getName().toUpperCase());
 		choice.select(project.getStatus().toString());
-		//startDateModel.getValue();
-		//endDateModel.getValue();
 		getStartDate();
 		getEndDate();
-		/*textStartDate.setText(project.getStartDate());
-		textEndDate.setText(project.getEndDate());*/
 		textArea.setText(project.getDescription());
 		budgetTextField.setText(String.valueOf(project.getBudget()));
 

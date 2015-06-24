@@ -47,6 +47,7 @@ public class MainController {
 		addListeners();
 	}
 
+	//*********************************************************Setters*****************************************************************
 	/**
 	 * Updates references to the currentUser in MainController and MainApplicationView.
 	 * @param memberUsername - username used to log in to the system or username used
@@ -68,7 +69,22 @@ public class MainController {
 
 	private void setCurrentActivity(Activity activity) {
 		currentActivity = activity;
-		//	mainView.getStartupView().getAppView().setCurrentProject(project); //Update reference in MainApplicationView
+	}
+
+	//*******************************************************Getters***********************************************************
+	/**
+	 * Returns the project Table from MainApplicationView.
+	 * @return
+	 */
+	private JTable getProjectTable() {
+		return mainView.getStartupView().getAppView().getProjectTable();
+	}
+	/**
+	 * Returns the activity Frame from the ProjectPanel
+	 * @return
+	 */
+	private ActivityFrame getActivityFrame() {
+		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
 	}
 	
 	/**
@@ -87,11 +103,42 @@ public class MainController {
 		return mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getActivityTable();
 	}
 
+<<<<<<< HEAD
 	private JList<Activity> getAvailableActivitiesTable() {
 		return mainView.getStartupView().getAppView().getProjectPanel().getAvailableActivitiesList();
 	}
 
 
+=======
+	//***************************************************Update Methods************************************************************
+	/**
+	 * Updates the project display panel which includes project and activity information.
+	 */
+	private void updateProjectDisplay() {
+
+		updateProjectTable();
+		updateActivityTable();
+		mainView.getStartupView().getAppView().updateDisplayPanel();
+	}
+
+	/**
+	 * Updates the project table whenever a project is added, deleted or edited.
+	 */
+	private void updateProjectTable(){
+		ResultSet results = mainModel.updateProjectTable(currentUser);
+		getProjectTable().setModel(DbUtils.resultSetToTableModel(results));
+	}
+
+	/**
+	 * Updates the activity table whenever an activity is added, deleted or edited.
+	 */
+	private void updateActivityTable(){
+		ResultSet results = mainModel.updateActivityTable(currentProject.getID());
+		getActivityTable().setModel(DbUtils.resultSetToTableModel(results));
+	}
+
+	//*************************************************Registering all listeners******************************************
+>>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
 	/**
 	 * Contains all listeners for the application.
 	 */
@@ -111,9 +158,13 @@ public class MainController {
 		mainView.getStartupView().getAppView().getProjectPanel().addChoosePrereqsListener(new ChoosePrereqsListener());
 	}
 
+	//***************************************************Helper Methods************************************************************
+
 	/**
-	 * Updates the project display panel which includes project and activity information.
+	 * To check if an item has been selected before editing or deleting. 
+	 * @return
 	 */
+<<<<<<< HEAD
 	private void updateProjectDisplay() {
 
 		updateProjectTable();
@@ -148,17 +199,44 @@ public class MainController {
 			JOptionPane.showMessageDialog(null, "No available prereqs!");
 		}
 	}
+=======
+	private boolean isAnythingSelected()
+	{
+		if (selectedActivityName == null) //This is always null ...need to change the condition.
+			return false;
+		return true;
+	}
 
-	public boolean isFormReady() {
-		int isReady = 0;
-		if(!mainModel.isProjectNameValid(currentUser,mainView.getStartupView().getAppView().getName()))
-			isReady = 5;
-		else 
-			isReady = mainView.getStartupView().getAppView().isJobFormReady();
+	/**
+	 * Before submitting the form, checking if form is completed correctly.
+	 * @param classType 1-project form, 2- activity form.
+	 * @return
+	 */
+	public boolean isFormReady(int classType){
+		int isReady = -1;
+
+		if(classType == 1){
+			if(!mainModel.isProjectNameValid(currentUser,mainView.getStartupView().getAppView().getName()))
+				isReady = 5;
+			else
+				isReady = mainView.getStartupView().getAppView().isJobFormReady();
+		}
+>>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
+
+		if(classType == 2){
+			try {
+				if(!mainModel.isActivityNameValid(currentProject.getName(),getActivityFrame().getActivityNameField()))
+					isReady = 6;
+				else
+					isReady = getActivityFrame().isJobFormReady() ;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 
 		switch(isReady) {
 		case 0:
-			JOptionPane.showMessageDialog(null, "Fill all fields");
+			JOptionPane.showMessageDialog(null, "Complete all fields");
 			return false;
 
 		case 1:
@@ -178,10 +256,22 @@ public class MainController {
 		case 5: 
 			JOptionPane.showMessageDialog(null, "You are currenty managing another project with the same name! Choose a different name.");
 			return false;
+		case 6: 
+			JOptionPane.showMessageDialog(null, "You already have an activity with the same name! Choose a different name.");
+			return false;
+		case 7: 
+			JOptionPane.showMessageDialog(null, "You entered an invalid format for one or more of the following fields:"
+					+ " Duration, ES, EF, LS and/or LF");
+			return false;
+		case 8: 
+			JOptionPane.showMessageDialog(null, "The duration of this activity cannot excede the duration for the whole project");
+			return false;
+
 		}
 		return true;
 	}
 
+	//***************************************************Listeners for Login/Sign up***********************************************
 	/**
 	 * Implements LoginListener.
 	 */
@@ -208,7 +298,6 @@ public class MainController {
 			}
 		}
 	}
-
 
 	/**
 	 * Implements signupListener.
@@ -254,56 +343,62 @@ public class MainController {
 	}
 
 
+	//***************************************************Listeners related to Projects*****************************************************
 	/**
 	 * Implements saveprojectListener.
 	 */
 	private class SaveProjectListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
+			boolean formReady = isFormReady(1);
+			try {
+				if(formReady) {
+					System.out.println("Edit mode :" + mainView.getStartupView().getAppView().getProjectPanel().getEditProjectMode());
+					String name = mainView.getStartupView().getAppView().getName();
+					String description = mainView.getStartupView().getAppView().getDescription();
+					String status = mainView.getStartupView().getAppView().getChoice();
+					double budget = mainView.getStartupView().getAppView().getBudget();
+					String startDate = mainView.getStartupView().getAppView().getStartDate();
+					String endDate = mainView.getStartupView().getAppView().getEndDate();
 
-			if(isFormReady()) {
-				System.out.println("Edit mode :" + mainView.getStartupView().getAppView().getProjectPanel().getEditProjectMode());
-				String name = mainView.getStartupView().getAppView().getName();
-				String description = mainView.getStartupView().getAppView().getDescription();
-				String status = mainView.getStartupView().getAppView().getChoice();
-				double budget = mainView.getStartupView().getAppView().getBudget();
-				String startDate = mainView.getStartupView().getAppView().getStartDate();
-				String endDate = mainView.getStartupView().getAppView().getEndDate();
+					//Create and save a new Project  (Edit Mode = FALSE)
+					boolean editMode = mainView.getStartupView().getAppView().getProjectPanel().getEditProjectMode();
+					if (!editMode) {
+						try {
+							mainModel.addProjectToDatabase(currentUser, name, description, status, budget, startDate, endDate);
 
-				//Create and save a new Project  (Edit Mode = FALSE)
-				boolean editMode = mainView.getStartupView().getAppView().getProjectPanel().getEditProjectMode();
-				if (!editMode) {
-					try {
-						mainModel.addProjectToDatabase(currentUser, name, description, status, budget, startDate, endDate);
-
-						setCurrentProject(mainModel.getCurrentProject());
-						mainView.getStartupView().getAppView().autoOpenProjectTab(); 
-						updateProjectDisplay();	
-					} catch (Exception e) {
-						e.printStackTrace();
+							setCurrentProject(mainModel.getCurrentProject());
+							mainView.getStartupView().getAppView().autoOpenProjectTab(); 
+							updateProjectDisplay();	
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
-				}
 
-				//Update and save an existing project (Edit Mode = TRUE)
-				else {
-					try {
-						mainModel.updateProjectInDatabase(name, description, status, budget, startDate, endDate);
-						mainView.getStartupView().getAppView().getProjectPanel().setEditProjectMode(false);	
-						setCurrentProject(mainModel.getCurrentProject());
-						mainView.getStartupView().getAppView().setEditMode(false);
-						mainView.getStartupView().getAppView().autoOpenProjectTab(); 
-						updateProjectDisplay();	
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null, "Error Occured. Please Try Again!");
+					//Update and save an existing project (Edit Mode = TRUE)
+					else {
+						try {
+							mainModel.updateProjectInDatabase(name, description, status, budget, startDate, endDate);
+							mainView.getStartupView().getAppView().getProjectPanel().setEditProjectMode(false);	
+							setCurrentProject(mainModel.getCurrentProject());
+							mainView.getStartupView().getAppView().setEditMode(false);
+							mainView.getStartupView().getAppView().autoOpenProjectTab(); 
+							updateProjectDisplay();	
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(null, "Error Occured. Please Try Again!");
+						}
 					}
-				}
-				mainView.getStartupView().getAppView().clearForm(); 
-				mainView.getStartupView().getAppView().displayWelcomePanel();
+					mainView.getStartupView().getAppView().clearForm(); 
+					mainView.getStartupView().getAppView().displayWelcomePanel();
 
+				}
+			} catch (HeadlessException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 	}
-
 
 	/**
 	 * Implements viewProjectsListener.
@@ -320,7 +415,6 @@ public class MainController {
 			} 			
 		}
 	}
-
 
 	/**
 	 * Implements openProjectListener.
@@ -360,7 +454,6 @@ public class MainController {
 		}
 	}
 
-
 	/**
 	 * Implements DeleteProjectListener.
 	 *
@@ -377,21 +470,7 @@ public class MainController {
 	}
 
 
-	private ActivityFrame getActivityFrame() {
-		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
-	}
-
-
-	/*	private class PrereqComboBoxListener implements ItemListener {
-		@Override
-		public void itemStateChanged(ItemEvent e) {
-			Activity activity = (Activity) e.getItem();
-			System.out.println("Selected prereq :" + activity.getID() + " - " + activity.getName());
-		}
-	}
-	 */
-
-
+	//***************************************************Listeners related to Activities*****************************************************
 	/**
 	 * Implements newActivityListener.
 	 * Creates the New Activity form.
@@ -413,7 +492,6 @@ public class MainController {
 
 	}
 
-
 	/**
 	 * Implements the SaveActivityListener.
 	 */
@@ -423,51 +501,50 @@ public class MainController {
 
 
 			mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setVisible(true);
-			try{
-				int pID = mainModel.getCurrentProject().getID();
-				String name = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityNameField();
-				String description = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityDescription();
-				double budget = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getBudget();
-				String duration = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityDuration();
-				String status = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityChoice();
-				/*String startDate = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getStartDate();
-				String endDate = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEndDate();*/
-				
+			boolean formReady = isFormReady(2);
+			if(formReady) {
+				try{
+					int pID = mainModel.getCurrentProject().getID();
+					String name = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityNameField();
+					String description = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityDescription();
+					double budget = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getBudget();
+					int duration = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityDuration();
+					int ES = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityES();
+					int EF = duration + ES;
+					int LS = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityLS();
+					int LF = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityLF();
+					String status = mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getActivityChoice();
 
+					boolean editMode = mainView.getStartupView().getAppView().getProjectPanel().getEditActivityMode();
+					if (!editMode) {
+						try {
+							mainModel.addActivityToDatabase(pID, name, description,budget, duration, ES, EF, LS, LF, status, getActivityTable());
+							JOptionPane.showMessageDialog(null, "Activity created sucessfully");
+							mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
+						} catch (Exception e) {
+							JOptionPane.showMessageDialog(null, e);
+						}
+					}
 
-				if( name.isEmpty() || description.isEmpty() || duration.isEmpty()) {		
-					JOptionPane.showMessageDialog(null, "Complete all fields");
-				}
-
-				boolean editMode = mainView.getStartupView().getAppView().getProjectPanel().getEditActivityMode();
-				if (!editMode) {
-					try {
-						mainModel.addActivityToDatabase(pID, name, description,budget, duration, status, getActivityTable());
-						JOptionPane.showMessageDialog(null, "Activity created sucessfully");
-						mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
-					} catch (Exception e) {
-						JOptionPane.showMessageDialog(null, e);
+					//Update and save an existing activity (Edit Mode = TRUE)
+					else {
+						try {
+							mainModel.updateActivityInDatabase(name, description, budget, duration, ES, EF, LS, LF, status);
+							mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(false);	
+							mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 				}
 
-				//Update and save an existing activity (Edit Mode = TRUE)
-				else {
-					try {
-						mainModel.updateActivityInDatabase(name, description, budget, duration,status);
-						mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(false);	
-						mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+				catch (Exception e) {
+					JOptionPane.showMessageDialog(null, e);
 				}
+				updateProjectDisplay();
 			}
-			catch (Exception e) {
-				JOptionPane.showMessageDialog(null, e);
-			}
-			updateProjectDisplay();
-		}
+		} 
 	}
-
 
 	/**
 	 * Implements the EditActivityListener.
@@ -475,21 +552,26 @@ public class MainController {
 	private class EditActivityListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(true); //set editMode ON
-			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); //get selected item from activityTable.
 
-			try {
-				setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
-				mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setEditActivityFrame(currentActivity);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if(isAnythingSelected()){
+				mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(true); //set editMode ON
+				selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); //get selected item from activityTable.
+
+				try {
+					setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
+					mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setEditActivityFrame(currentActivity);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEditActivityFrame().setVisible(true);
+				updateProjectDisplay();
+				selectedActivityName = null;
 			}
-			mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEditActivityFrame().setVisible(true);
-			updateProjectDisplay();
+
+			else
+				JOptionPane.showMessageDialog(null,"No Item was selected. Select an activity to edit.");
 		}
-
 	}
-
 
 	/**
 	 * Implements the DeleteActivityListener.
@@ -501,13 +583,22 @@ public class MainController {
 			setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
 			int confirm = JOptionPane.showConfirmDialog(null, "Confirm Delete.", "Delete", JOptionPane.OK_CANCEL_OPTION);
 			if (confirm == 0) {
-				mainModel.deleteActivityFromDatabase(currentActivity);
+				mainModel.deleteActivityFromDatabase(currentActivity); 
+				selectedActivityName = null; //To make sure that the selection is "empty"
 				updateProjectDisplay();	
 			}
 		}
 	}
 
-	
+	/*	private class PrereqComboBoxListener implements ItemListener {
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		Activity activity = (Activity) e.getItem();
+		System.out.println("Selected prereq :" + activity.getID() + " - " + activity.getName());
+	}
+}
+	 */
+
 	/**
 	 * Implements a listener to choose prerequisites for a selected activity.
 	 */
@@ -515,11 +606,18 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); 
+<<<<<<< HEAD
 			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();	
 			updatePrereqTable(selectedActivityName); 
 		}		
 	}
+=======
+			//Implement method to set the tables accordingly --- doing this next
+			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();
+>>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
 
+		}
 
+	}
 }
 

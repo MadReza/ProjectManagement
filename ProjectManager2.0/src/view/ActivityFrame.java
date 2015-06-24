@@ -1,9 +1,11 @@
 package view;
 
 import javax.swing.*;
+
 import java.awt.Choice;
 import java.awt.Component;
 import java.awt.Font;
+
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -13,14 +15,20 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+
 import model.Activity;
+import model.Status;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.awt.Color;
+
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 
@@ -68,7 +76,6 @@ public class ActivityFrame extends JFrame {
 					activityNameTextField.setText(" ");
 				else
 					activityNameTextField.setText(" ");
-
 			}
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -88,7 +95,7 @@ public class ActivityFrame extends JFrame {
 		panel_4.setLayout(null);
 		panel_4.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_4.setBounds(96, 260, 215, 55);
-		getContentPane().add(panel_4);
+
 
 		activityBudgetTextField = new JTextField();
 		activityBudgetTextField.setText("Budget");
@@ -112,24 +119,25 @@ public class ActivityFrame extends JFrame {
 		activityBudgetTextField.setColumns(10);
 		activityBudgetTextField.setBounds(35, 11, 144, 33);
 		panel_4.add(activityBudgetTextField);
+		getContentPane().add(panel_4);
 
 		JPanel panel_5 = new JPanel();
 		panel_5.setLayout(null);
 		panel_5.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_5.setBounds(313, 260, 225, 55);
-		getContentPane().add(panel_5);
 
 		statusChoice = new Choice();
 		statusChoice.setBounds(40, 17, 144, 35);
 		statusChoice.add("Locked");
 		statusChoice.add("Unlocked");
 		panel_5.add(statusChoice);
+		getContentPane().add(panel_5);
 
 		JPanel panel_6 = new JPanel();
 		panel_6.setLayout(null);
 		panel_6.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_6.setBounds(313, 79, 225, 55);
-		getContentPane().add(panel_6);
+
 
 		activityDurationTextField = new JTextField();
 		/*activityDurationTextField.addFocusListener(new FocusAdapter() {
@@ -152,6 +160,7 @@ public class ActivityFrame extends JFrame {
 		activityDurationTextField.setColumns(10);
 		activityDurationTextField.setBounds(40, 11, 144, 33);
 		panel_6.add(activityDurationTextField);
+		getContentPane().add(panel_6);
 
 		activityDescription = new JTextArea();
 		/*activityDescription.addFocusListener(new FocusAdapter() {
@@ -178,7 +187,6 @@ public class ActivityFrame extends JFrame {
 		panel_1.setLayout(null);
 		panel_1.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_1.setBounds(96, 135, 81, 66);
-		getContentPane().add(panel_1);
 
 		earliestStartTextField = new JTextField();
 		/*earliestStartTextField.addFocusListener(new FocusAdapter() {
@@ -201,14 +209,15 @@ public class ActivityFrame extends JFrame {
 		earliestStartTextField.setColumns(10);
 		earliestStartTextField.setBounds(8, 16, 65, 33);
 		panel_1.add(earliestStartTextField);
+		getContentPane().add(panel_1);
 
 		JPanel panel_2 = new JPanel();
 		panel_2.setLayout(null);
 		panel_2.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_2.setBounds(96, 201, 81, 58);
-		getContentPane().add(panel_2);
 
-		earliestFinishTextField = new JTextField();
+
+		latestStartTextField = new JTextField();
 		/*earliestFinishTextField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -226,17 +235,18 @@ public class ActivityFrame extends JFrame {
 					earliestFinishTextField.setText("EF");
 			}
 		});*/
-		earliestFinishTextField.setColumns(10);
-		earliestFinishTextField.setBounds(8, 12, 65, 33);
-		panel_2.add(earliestFinishTextField);
+		latestStartTextField.setColumns(10);
+		latestStartTextField.setBounds(8, 16, 65, 33);
+		panel_2.add(latestStartTextField);
+		getContentPane().add(panel_2);
 
 		JPanel panel_3 = new JPanel();
 		panel_3.setLayout(null);
 		panel_3.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_3.setBounds(457, 135, 81, 66);
-		getContentPane().add(panel_3);
 
-		latestStartTextField = new JTextField();
+
+		earliestFinishTextField = new JTextField();
 		/*latestStartTextField.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusGained(FocusEvent arg0) {
@@ -254,15 +264,15 @@ public class ActivityFrame extends JFrame {
 					latestStartTextField.setText("LS");
 			}
 		});*/
-		latestStartTextField.setColumns(10);
-		latestStartTextField.setBounds(8, 16, 65, 33);
-		panel_3.add(latestStartTextField);
+		earliestFinishTextField.setColumns(10);
+		earliestFinishTextField.setBounds(8, 12, 65, 33);
+		panel_3.add(earliestFinishTextField);
+		getContentPane().add(panel_3);
 
 		JPanel panel_7 = new JPanel();
 		panel_7.setLayout(null);
 		panel_7.setBorder(new SoftBevelBorder(BevelBorder.RAISED, null, null, null, null));
 		panel_7.setBounds(457, 201, 81, 58);
-		getContentPane().add(panel_7);
 
 		latestFinishTextField = new JTextField();
 		/*latestFinishTextField.addFocusListener(new FocusAdapter() {
@@ -285,6 +295,7 @@ public class ActivityFrame extends JFrame {
 		latestFinishTextField.setColumns(10);
 		latestFinishTextField.setBounds(8, 12, 65, 33);
 		panel_7.add(latestFinishTextField);
+		getContentPane().add(panel_7);
 
 		JLabel lblActivityForm = new JLabel("Activity Form");
 		lblActivityForm.setForeground(new Color(255, 255, 255));
@@ -309,6 +320,158 @@ public class ActivityFrame extends JFrame {
 
 	}
 
+	// adding an action listener to the save activity button
+	public void addSaveActivityListener(ActionListener saveActivityListener){
+		saveActivityButton.addActionListener(saveActivityListener);
+	}
+
+	public void setCurrentActivity(Activity activity){
+		this.currentActivity = activity;
+	}
+
+	public void setEditActivityFrame(Activity activity){
+		activityNameTextField.setText(activity.getName());
+		statusChoice.select(activity.getStatus().toString());
+		Double budget = activity.getBudget();
+		activityBudgetTextField.setText(budget.toString());
+		activityDescription.setText(activity.getDescription());
+		Integer duration = activity.getDuration();
+		activityDurationTextField.setText(duration.toString());
+		Integer earliestStart = activity.getEarliestStart();
+		earliestStartTextField.setText(earliestStart.toString());
+		Integer latestStart = activity.getLatestStart();
+		latestStartTextField.setText(latestStart.toString());
+		Integer earliestFinish = activity.getEarliestFinish();
+		earliestFinishTextField.setText(earliestFinish.toString());
+		Integer latestFinish = activity.getLatestFinish();
+		latestFinishTextField.setText(latestFinish.toString());
+		setVisible(true);
+	}
+
+	public JPanel getEditActivityFrame(){
+		activityPanel.setVisible(true);
+		return activityPanel;
+	}
+
+	public void setActivityName(JTextField activityName) {
+		this.activityNameTextField = activityName;
+	}
+
+	public String getActivityNameField(){
+		return activityNameTextField.getText();
+	}
+
+	public Integer getActivityDuration() {
+		int duration = -1;
+
+		try {
+			duration = Integer.parseInt(activityDurationTextField.getText());
+			return (new Integer(activityDurationTextField.getText()));
+		}
+		catch(NumberFormatException e) {
+			return duration;
+		}
+	}
+	
+	public Integer getActivityES() {
+		int earliestStart = -1;
+
+		try {
+			earliestStart = Integer.parseInt(earliestStartTextField.getText());
+			return (new Integer(earliestStartTextField.getText()));
+		}
+		catch(NumberFormatException e) {
+			return earliestStart; 
+		}
+	}
+
+	public Integer getActivityLS() {
+		int latestStart = 0;
+
+		try {
+			latestStart = Integer.parseInt(latestStartTextField.getText());
+			return (new Integer(latestStartTextField.getText()));
+		}
+		catch(NumberFormatException e) {
+			return latestStart; 
+		}
+	}
+	
+	public Integer getActivityEF() {
+		int earliestFinish = 0;
+
+		try {
+			earliestFinish = Integer.parseInt(earliestFinishTextField.getText());
+			return (new Integer(earliestFinishTextField.getText()));
+		}
+		catch(NumberFormatException e) {
+
+			return earliestFinish; 
+		}
+	}
+
+	public Integer getActivityLF() {
+		int latestFinish = 0;
+
+		try {
+			latestFinish = Integer.parseInt(latestFinishTextField.getText());
+			return (new Integer(latestFinishTextField.getText()));
+		}
+		catch(NumberFormatException e) {
+
+			return latestFinish; 
+		}
+	}
+
+	public String getActivityDescription()	{
+		return activityDescription.getText();
+	}
+
+	public Double getBudget() {
+		double budget = -1.0;
+
+		try {
+			budget = Double.parseDouble(activityBudgetTextField.getText());
+			return (new Double(activityBudgetTextField.getText()));
+		}
+		catch(NumberFormatException e) {
+			return budget; // if the code gets to here, it wasn't recognized as a double.
+		}
+	}
+
+	public String getActivityChoice() {
+		return 	statusChoice.getSelectedItem();
+	}
+
+	public int isJobFormReady(){
+
+		if(getActivityNameField().equals("") || getBudget().equals("") || getActivityDescription().equals("")
+				|| getActivityDuration().equals("")){
+			return 0;
+		}
+		/*
+		if( startDateModel.getValue().after(endDateModel.getValue())){
+			return 1;
+		}
+
+		if(getActivityChoice().equals(Status.IN_PROGRESS)  &&  startDateModel.getValue().after(cal.getTime()) ){
+			return 2;
+		}
+
+		if(getActivityChoice().equals(Status.COMPLETED)  &&  endDateModel.getValue().after(cal.getTime())){
+			return 3;
+		}*/
+
+		if (getBudget() == -1.0)
+		{
+			return 4;
+		}
+		if (getActivityDuration() == -1 || getActivityES() == -1 || getActivityEF() == -1 || getActivityLS() == -1 || getActivityLF() == -1)
+		{
+			return 7;
+		}
+		return -1;	
+	}
 
 	public void updatePossiblePrereqItems(ArrayList<Activity> allActivities) {
 		if(allActivities != null) {
@@ -331,98 +494,19 @@ public class ActivityFrame extends JFrame {
 			activityPanel.add(precedingActivityChoice);
 		}
 	}
-
-	public void setCurrentActivity(Activity activity)
-	{
-		this.currentActivity = activity;
-	}
-
-	public void setEditActivityFrame(Activity activity)
-	{
-		activityNameTextField.setText(activity.getName());
-		statusChoice.select(activity.getStatus().toString());
-		Double budget = activity.getBudget();
-		activityBudgetTextField.setText(budget.toString());
-		activityDescription.setText(activity.getDescription());
-		setVisible(true);
-	}
-
-	public JPanel getEditActivityFrame()
-	{
-		activityPanel.setVisible(true);
-		return activityPanel;
-
-	}
-	// adding an action listener to the save activity button
-	public void addSaveActivityListener(ActionListener saveActivityListener){
-		saveActivityButton.addActionListener(saveActivityListener);
-	}
-
-	public void setActivityName(JTextField activityName) {
-		this.activityNameTextField = activityName;
-	}
-
-	public String getActivityNameField(){
-		return activityNameTextField.getText();
-	}
-
-	public void setActivityDuration(JTextField duration) {
-		this.activityDurationTextField = duration;
-	}
-
-	public String getActivityDuration(){
-		return activityDurationTextField.getText();
-	}
-
-	public void setActivityChoice(Choice choice) {
-		this.statusChoice = choice;
-	}
-	public String getActivityChoice() {
-		return 	statusChoice.getSelectedItem();
-	}
-
-	/*public void setStartDate(JTextField textStartDate) {
-		this.startDateTextField = textStartDate;
-	}
-
-	public String getStartDate() {
-		return startDateTextField.getText();
-	}
-
-	public void setEndDate(JTextField textEndDate) {
-		this.endDateTextField = textEndDate;
-	}
-	public String getEndDate() {
-		return endDateTextField.getText();
-	}*/
-
-	public void setActivityDescription(JTextArea activityDescription){
-		this.activityDescription = activityDescription;
-	}
-
-	public String getActivityDescription()
-	{
-		return activityDescription.getText();
-	}
-
-	public Double getBudget() {
-		double budget = -1.0;
-
-		try {
-			budget = Double.parseDouble(activityBudgetTextField.getText());
-			return (new Double(activityBudgetTextField.getText()));
-		}
-		catch(NumberFormatException e) {
-			return budget; // if the code gets to here, it wasn't recognized as a double.
-		}
-	}
-
-	// clears JobForm
+	// clears Activity Form
 	public void clearForm() {
 		activityNameTextField.setText("");
 		activityDescription.setText("");
+		activityDurationTextField.setText("");
 		activityBudgetTextField.setText("");
+		earliestStartTextField.setText("");
+		earliestFinishTextField.setText("");
+		latestStartTextField.setText("");
+		latestFinishTextField.setText("");
 		precedingActivityChoice.setSelectedItem(null);
-	} 
-}
+	}
+
+} 
+
 

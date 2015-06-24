@@ -8,26 +8,32 @@ import java.util.Date;
 public class Activity {
 
 	private String name, description;
-	private int ID,parentProjectID;
+	private int ID,parentProjectID, duration, earliestStart,earliestFinish,latestStart,latestFinish;
 	private double budget;
-	private String finishDate, startDate, duration;	
+	private String finishDate, startDate;	
 	private Status status;							// ENUM class
 	private ArrayList <Activity> preReq;			// list of prerequisite activities
 	private ArrayList <Activity> successors;		// list of Activities that depend on this Activity
 	//	private ArrayList <Member> activityTeam;		// members who are assigned to this activity        			next Iteration
 
-	protected Activity (int ID,int parentProjectID, String name, String description, double budget, String duration, Status status) throws Exception {
+	protected Activity (int ID,int parentProjectID, String name, String description, double budget, int duration, int ES, int EF,
+			int LS, int LF, Status status) throws Exception {
 		this.ID = ID;
 		this.parentProjectID = parentProjectID;
 		setName(name);
 		setDescription(description);
-		setBudget(budget);
 		setDuration(duration);
+		setEarliestStart(ES);
+		setEarliestFinish(EF);
+		setLatestStart(LS);
+		setLatestFinish(LF);
+		setBudget(budget);
+
 		//setStartDate(startDate);
 		//setFinishDate(finishDate);
 		setStatus(Status.LOCKED);				// any activity is locked by default until checking its prerequisites are finished
 	}
-	
+
 	public String getName() {
 		return name;
 	}
@@ -39,13 +45,13 @@ public class Activity {
 	public String getDescription() {
 		return description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.description = description;
 	}
 
 	public void setBudget(double budget) throws Exception{
-		if (budget<0){
+		if (budget < 0){
 			throw new Exception("Invalid Budget");
 		}
 		this.budget = budget;
@@ -55,7 +61,7 @@ public class Activity {
 	{
 		return budget;
 	}
-	
+
 	public int getID() {
 		return ID;
 	}
@@ -66,45 +72,62 @@ public class Activity {
 		}
 		ID = iD;
 	}
-
-	public String getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(String startDate) throws Exception {
-
-		String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		if( startDate.compareTo(today) < 0) {
-			throw new Exception("Can't start in the past");
-		}
-
-		this.startDate = startDate;
-	}
-
-	public String getEndDate() {
-		return finishDate;
-	}
-
-	public void setFinishDate(String finishDate) throws Exception {
-
-		String today = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-		if( finishDate.compareTo(today) < 0) {
-			throw new Exception("Can't start in the past");
-		}
-
-		if( finishDate.compareTo(this.getStartDate()) < 0 ){
-			throw new Exception("Can't finish before the Start date");
-		}
-		this.finishDate = finishDate;
-	}
-
-	public void setDuration(String duration)
+	
+	public void setDuration(int duration) throws Exception
 	{
+		if (duration < 0){
+			throw new Exception("Invalid Duration");
+		}
 		this.duration = duration;
 	}
-	
-	public String getDuration(){
+
+	public int getDuration(){
 		return duration;
+	}
+
+	public int getEarliestStart() {
+		return earliestStart;
+	}
+
+	public void setEarliestStart(int earliestStart) throws Exception {
+		if (earliestStart < 0){
+			throw new Exception("Invalid Input For Earliest Start");
+		}
+
+		this.earliestStart = earliestStart;
+	}
+
+	public int getEarliestFinish() {
+		return earliestFinish;
+	}
+
+	public void setEarliestFinish(int earliestFinish) throws Exception {
+		if (earliestFinish < 0){
+			throw new Exception("Invalid Input For Earliest Finish");
+		}
+		this.earliestFinish = earliestStart + this.duration;
+	}
+
+	public int getLatestStart() {
+		return latestStart;
+	}
+
+	public void setLatestStart(int latestStart) throws Exception{
+		if (latestStart < 0){
+			throw new Exception("Invalid Input For Latest Start");
+		}
+		this.latestStart = latestStart;
+	}
+
+	public int getLatestFinish() {
+		return latestFinish;
+	}
+
+	public void setLatestFinish(int latestFinish) throws Exception {
+		if (latestFinish < 0){
+			throw new Exception("Invalid Input For Latest Finish");
+		}
+		this.latestFinish = latestFinish;
 	}
 
 	public Status getStatus() {
@@ -131,7 +154,6 @@ public class Activity {
 		preReq.remove(deletedActivity);
 	}
 
-
 	public ArrayList<Activity> getSuccessors() {
 		return successors;
 	}
@@ -150,7 +172,7 @@ public class Activity {
 	public void setParentProjectID(int parentProjectID) {
 		this.parentProjectID = parentProjectID;
 	}
-	
+
 	public String toString() {
 		return name;
 	}
