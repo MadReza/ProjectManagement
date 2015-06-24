@@ -79,7 +79,7 @@ public class MainController {
 	private JTable getProjectTable() {
 		return mainView.getStartupView().getAppView().getProjectTable();
 	}
-	
+
 	/**
 	 * Returns the activity Frame from the ProjectPanel
 	 * @return
@@ -87,7 +87,7 @@ public class MainController {
 	private ActivityFrame getActivityFrame() {
 		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
 	}
-	
+
 
 	/**
 	 * Returns the activity Table from DisplayPanel.
@@ -175,13 +175,7 @@ public class MainController {
 
 	//***************************************************Helper Methods************************************************************
 
-	private boolean isAnythingSelected()
-	{
-		if (selectedActivityName == null) //This is always null ...need to change the condition.
-			return false;
-		return true;
-	}
-
+	
 	/**
 	 * Before submitting the form, checking if form is completed correctly.
 	 * @param classType 1-project form, 2- activity form.
@@ -243,6 +237,18 @@ public class MainController {
 
 		}
 		return true;
+	}
+
+	/**
+	 * 
+	 * @return
+	 * @throws Exception
+	 */
+	private boolean canEnableChoosePrereqsButton() throws Exception
+	{
+		if (mainModel.getAllActivities().size() > 1)
+			return true;
+		return false;
 	}
 
 	//***************************************************Listeners for Login/Sign up***********************************************
@@ -465,14 +471,12 @@ public class MainController {
 		}
 
 	}
-
 	/**
 	 * Implements the SaveActivityListener.
 	 */
 	private class SaveActivityListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event){
-
 
 			mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setVisible(true);
 			boolean formReady = isFormReady(2);
@@ -494,6 +498,8 @@ public class MainController {
 						try {
 							mainModel.addActivityToDatabase(pID, name, description,budget, duration, ES, EF, LS, LF, status, getActivityTable());
 							JOptionPane.showMessageDialog(null, "Activity created sucessfully");
+							/*if (canEnableChoosePrereqsButton())
+								mainView.getStartupView().getAppView().getProjectPanel().getChoosePrereqsBtn().setEnabled(true);*/
 							mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().dispose();
 						} catch (Exception e) {
 							JOptionPane.showMessageDialog(null, e);
@@ -520,6 +526,7 @@ public class MainController {
 		} 
 	}
 
+
 	/**
 	 * Implements the EditActivityListener.
 	 */
@@ -527,23 +534,19 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 
-			if(isAnythingSelected()){
-				mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(true); //set editMode ON
-				selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); //get selected item from activityTable.
-
-				try {
-					setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
-					mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setEditActivityFrame(currentActivity);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-				mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEditActivityFrame().setVisible(true);
-				updateProjectDisplay();
-				selectedActivityName = null;
+			mainView.getStartupView().getAppView().getProjectPanel().setEditActivityMode(true); //set editMode ON
+			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); //get selected item from activityTable.
+			if (selectedActivityName == null)
+				return;
+			try {
+				setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
+				mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().setEditActivityFrame(currentActivity);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-
-			else
-				JOptionPane.showMessageDialog(null,"No Item was selected. Select an activity to edit.");
+			mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame().getEditActivityFrame().setVisible(true);
+			updateProjectDisplay();
+			selectedActivityName = null;
 		}
 	}
 
@@ -552,8 +555,10 @@ public class MainController {
 	 */
 	private class DeleteActivityListener implements ActionListener {
 		@Override
-		public void actionPerformed(ActionEvent event) {
+		public void actionPerformed(ActionEvent arg0) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); //get selected item from activityTable.
+			if (selectedActivityName == null)
+				return;
 			setCurrentActivity(mainModel.getActivityByName(selectedActivityName)); //Update currentActivity (used for display).
 			int confirm = JOptionPane.showConfirmDialog(null, "Confirm Delete.", "Delete", JOptionPane.OK_CANCEL_OPTION);
 			if (confirm == 0) {
@@ -564,6 +569,7 @@ public class MainController {
 		}
 	}
 
+
 	/**
 	 * Implements a listener to choose prerequisites for a selected activity.
 	 */
@@ -571,21 +577,27 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); 
-			mainView.getStartupView().getAppView().getProjectPanel().displayPrereqsFrame();	
-			updatePrereqTable(selectedActivityName); 
-		}		
+			if (selectedActivityName == null)
+				return;
+			else if (mainModel.getAllActivities().size() < 2)
+				JOptionPane.showMessageDialog(null, "This is the first activity. It cannot have a prequisite.");
+			else{
+				mainView.getStartupView().getAppView().getProjectPanel().displayPrereqsFrame();	
+				updatePrereqTable(selectedActivityName); 
+			}		
+		}
 	}
 
-	
+
 	private class SavePrereqsListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			ArrayList<Activity> selectedPrereqs = mainView.getStartupView().getAppView().getProjectPanel().getSelectedPrereqs();
 			mainModel.associateActivityWithPrerequisites(getSelectedActivityName(), selectedPrereqs);
 			mainView.getStartupView().getAppView().getProjectPanel().disposePrereqsFrame();
-			
+
 		}
-		
+
 	}
 
 

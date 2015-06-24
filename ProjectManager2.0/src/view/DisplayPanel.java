@@ -5,6 +5,7 @@ import javax.swing.*;
 import java.awt.Color;
 
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JTextArea;
@@ -132,6 +133,11 @@ public class DisplayPanel extends JPanel {
 	public String getSelectedActivity() {
 		int row = activityTable.getSelectedRow();
 		int column = activityTable.getSelectedColumn();
+		if (row < 0 || column < 0)
+			{
+			JOptionPane.showMessageDialog(null,"No Item was selected. Please choose an activity to perform this action.");
+			return null;
+			}
 		return activityTable.getValueAt(row,column).toString();
 	}
 

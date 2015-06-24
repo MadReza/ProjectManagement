@@ -144,7 +144,7 @@ public class ProjectPanel extends JPanel {
 		displayPanel = new DisplayPanel();
 		displayPanel.setBackground(new Color(169, 169, 169));
 		projectTabPanel.add(displayPanel);
-		
+
 		createPrereqsFrame();
 
 	}
@@ -219,11 +219,16 @@ public class ProjectPanel extends JPanel {
 		}
 		return prereqs;
 	}
-	
+
+	public JButton getChoosePrereqsBtn()
+	{
+		return choosePrereqsButton;
+	}
+
 	public void displayPrereqsFrame() {
 		prereqSelectionFrame.setVisible(true);	
 	}
-	
+
 	public void disposePrereqsFrame() {
 		prereqSelectionFrame.dispose();
 	}
@@ -244,7 +249,7 @@ public class ProjectPanel extends JPanel {
 	private void createPrereqsFrame() {
 
 		prereqSelectionFrame = new JFrame();
-		prereqSelectionFrame.setTitle("Choose prerequistes");
+		prereqSelectionFrame.setTitle("Choose prerequisites");
 		prereqSelectionFrame.setBounds(100, 100, 465, 356);
 		prereqSelectionFrame.getContentPane().setLayout(null);
 		prereqSelectionFrame.setVisible(false);
@@ -383,7 +388,7 @@ public class ProjectPanel extends JPanel {
 	}
 
 	/**
-	 * Customises the content of an object that is to be displayed in lists 
+	 * Customizes the content of an object that is to be displayed in lists 
 	 * used in the Choose Prerequisite frame.
 	 */
 	private class PreReqListCellRenderer extends DefaultListCellRenderer {
@@ -400,10 +405,6 @@ public class ProjectPanel extends JPanel {
 			return this;
 		}
 	}
-
-	
-
-
 }
 
 
