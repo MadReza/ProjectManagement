@@ -317,7 +317,6 @@ public class MainModel {
 		try {
 			return database.getAllProjectActivities(currentProject.getID());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return allProjectActivities;
@@ -344,7 +343,7 @@ public class MainModel {
 		return null;
 	}
 
-<<<<<<< HEAD
+
 	
 	/**
 	 * Construct an arraylist of activities associated with the activityIDs.
@@ -371,7 +370,6 @@ public class MainModel {
 	 */
 	public ArrayList<Activity> getAvailableActivities(int id, String activityName) throws Exception {
 		int selectedActivityID = getActivityByName(activityName).getID();
-		ArrayList<Activity> availableActivities = new ArrayList<Activity>();
 		ArrayList<Integer> availableChoices;
 	
 		availableChoices = database.getAvailableChoicesForPrerequisites(id, selectedActivityID);
@@ -387,15 +385,10 @@ public class MainModel {
 	 */
 	public ArrayList<Activity> getSelectedPrerequisties(String activityName) throws Exception {
 		int selectedActivityID = getActivityByName(activityName).getID();
-		ArrayList<Activity> chosenPrereqs = new ArrayList<Activity>();
 		ArrayList<Integer> chosenPrereqIDs;
 	
 		chosenPrereqIDs = database.getSelectedPrereqs(selectedActivityID);
 		return constructArrayListOfActivities(chosenPrereqIDs);
 	}
 
-	
-
-=======
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
 }

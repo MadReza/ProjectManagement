@@ -32,27 +32,27 @@ import model.Project;
 
 @SuppressWarnings("serial")
 public class ProjectPanel extends JPanel {
-	
+
 	private JPanel projectTabPanel, projectForm;
 	private ActivityFrame activityFrame;
 	private JFrame prereqSelectionFrame;
-	
+
 	private JTextField nameTextField, budgetTextField;
 	private DisplayPanel displayPanel;
 	private JTextArea descriptionArea;
 	private JComboBox<String> statusCombo;
 	private JButton addActivityButton, deleteProjectButton, editProjectButton, choosePrereqsButton,savePrereqsButton, addMemberButton, 
-			addGantChartButton, evaluateCPAButton, pertButton, earnedValueButton,editActivityButton,deleteActivityButton ;
-	
+	addGantChartButton, evaluateCPAButton, pertButton, earnedValueButton,editActivityButton,deleteActivityButton ;
+
 	private JList<Activity> availableActivities, chosenPrereqs;
 	private DefaultListModel<Activity> availableModel, chosenModel;
-	
-		
+
+
 	private boolean editProjectMode = false;
 	private boolean editActivitytMode = false;
 
 	protected ProjectPanel(JTabbedPane tabbedPane) {
-		
+
 		projectTabPanel = new JPanel();
 		projectTabPanel.setBackground(new Color(211, 211, 211));
 		projectTabPanel.setLayout(null);
@@ -110,7 +110,7 @@ public class ProjectPanel extends JPanel {
 		deleteActivityButton.setToolTipText("Delete an activity");
 		deleteActivityButton.setBounds(214, 194, 60, 60);
 		projectTabPanel.add(deleteActivityButton);
-		
+
 		choosePrereqsButton = new JButton(new ImageIcon("Images\\prerequisites.png"));
 		choosePrereqsButton.setToolTipText("Add or remove prerequisite activities");
 		choosePrereqsButton.setBounds(20, 282, 60, 60);
@@ -150,15 +150,15 @@ public class ProjectPanel extends JPanel {
 	protected void setStatusDefault(int def) {
 		statusCombo.setSelectedIndex(def);
 	}
-	
+
 	public void setEditProjectMode(boolean mode) {
 		editProjectMode = mode;
 	}
-	
+
 	public boolean getEditProjectMode() {
 		return editProjectMode;
 	}
-	
+
 	public void setEditActivityMode(boolean mode) {
 		editActivitytMode  = mode;
 	}
@@ -166,7 +166,7 @@ public class ProjectPanel extends JPanel {
 	public boolean getEditActivityMode() {
 		return editActivitytMode;
 	}
-	
+
 	public String getName() {
 		return nameTextField.getText();
 	}
@@ -182,15 +182,15 @@ public class ProjectPanel extends JPanel {
 	public DisplayPanel getDisplayPanel() {
 		return displayPanel;
 	}
-	
-/*	public String getStartDate(){
+
+	/*	public String getStartDate(){
 		return  startDateCombo.getSelectedItem().toString();
 	}
 
 	public String getFinishDate(){
 		return  finishDateCombo.getSelectedItem().toString();
 	}
-*/
+	 */
 	public int getStatus(){
 		return statusCombo.getSelectedIndex();
 	}
@@ -198,15 +198,15 @@ public class ProjectPanel extends JPanel {
 	public ActivityFrame getActivityFrame(){
 		return this.activityFrame;
 	}
-	
+
 	public JList<Activity> getAvailableActivitiesList() {
 		return availableActivities;
 	}
-	
+
 	public JList<Activity> getChosenActivitiesList() {
 		return chosenPrereqs;
 	}
-	
+
 	public ArrayList<Activity> getChosenPrereqs() {
 		ArrayList<Activity> prereqs = new ArrayList<Activity>();
 		if(!chosenModel.isEmpty()) {
@@ -219,45 +219,45 @@ public class ProjectPanel extends JPanel {
 			JOptionPane.showMessageDialog(null,"Please select at least one prerequisite.");
 		return prereqs;
 	}
-	
+
 	//Display details according to the project currently opened.
 	public void updateDisplayPanel(Project project) {
-		
+
 		String name = project.getName().toUpperCase();
 		String progress = project.getStatus().toString();
 		String startDate = project.getStartDate();
 		String endDate = project.getEndDate();
 		String description = project.getDescription();
 		String budget = String.valueOf(project.getBudget());
-		
+
 		displayPanel.updateProjectInfo(name, progress, startDate, endDate, description, budget);
 	}
-	
+
 	public void createPrereqsTable() {
-		
+
 		prereqSelectionFrame = new JFrame();
 		prereqSelectionFrame.setTitle("Choose prerequistes");
 		prereqSelectionFrame.setBounds(100, 100, 465, 356);
 		prereqSelectionFrame.getContentPane().setLayout(null);
 		prereqSelectionFrame.setVisible(true);
 		prereqSelectionFrame.setResizable(false);
-		
+
 		JScrollPane scrollPaneActs = new JScrollPane();
 		scrollPaneActs.setBounds(20, 37, 154, 224);
 		prereqSelectionFrame.getContentPane().add(scrollPaneActs);
-		
+
 		availableActivities = new JList<Activity>();
 		availableActivities.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPaneActs.setViewportView(availableActivities);
-		
+
 		JScrollPane scrollPanePrereqs = new JScrollPane();
 		scrollPanePrereqs.setBounds(268, 37, 154, 224);
 		prereqSelectionFrame.getContentPane().add(scrollPanePrereqs);
-		
+
 		chosenPrereqs = new JList<Activity>();
 		chosenPrereqs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		scrollPanePrereqs.setViewportView(chosenPrereqs);
-		
+
 		JButton addPrerqsButton = new JButton(">>");
 		addPrerqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
 		addPrerqsButton.setBounds(196, 87, 51, 35);
@@ -268,7 +268,7 @@ public class ProjectPanel extends JPanel {
 			}
 		});
 		prereqSelectionFrame.getContentPane().add(addPrerqsButton);
-		
+
 		JButton RemovePrereqsButton = new JButton("<<");
 		RemovePrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
 		RemovePrereqsButton.setBounds(196, 147, 51, 35);
@@ -279,24 +279,24 @@ public class ProjectPanel extends JPanel {
 			}
 		});
 		prereqSelectionFrame.getContentPane().add(RemovePrereqsButton);
-		
+
 		JLabel lblNewLabel = new JLabel("Available Activities");
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		lblNewLabel.setFont(new Font("High Tower Text", Font.PLAIN, 16));
 		lblNewLabel.setBounds(22, 11, 152, 21);
 		prereqSelectionFrame.getContentPane().add(lblNewLabel);
-		
+
 		JLabel lblSelectedPrerequistes = new JLabel("Selected Prerequistes");
 		lblSelectedPrerequistes.setHorizontalAlignment(SwingConstants.CENTER);
 		lblSelectedPrerequistes.setFont(new Font("High Tower Text", Font.PLAIN, 16));
 		lblSelectedPrerequistes.setBounds(272, 11, 152, 21);
 		prereqSelectionFrame.getContentPane().add(lblSelectedPrerequistes);
-		
+
 		savePrereqsButton = new JButton("Save");
 		savePrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
 		savePrereqsButton.setBounds(121, 292, 89, 23);
 		prereqSelectionFrame.getContentPane().add(savePrereqsButton);
-		
+
 		JButton cancelPrereqsButton = new JButton("Cancel");
 		cancelPrereqsButton.setFont(new Font("High Tower Text", Font.PLAIN, 15));
 		cancelPrereqsButton.addActionListener(new ActionListener() {
@@ -307,21 +307,21 @@ public class ProjectPanel extends JPanel {
 		cancelPrereqsButton.setBounds(227, 292, 89, 23);
 		prereqSelectionFrame.getContentPane().add(cancelPrereqsButton);		
 	}
-	
+
 	private void addToList(DefaultListModel<Activity> model, JList<Activity> list, Activity activity) {
 		model.addElement(activity);
 		list.setModel(model);	
 	}
-	
+
 	private void removeFromList(DefaultListModel<Activity> model, JList<Activity> list, Activity activity) {
 		model.removeElement(activity);
 		list.setModel(model);
 	}
-	
+
 	public void updateAvailableListEntries(ArrayList<Activity> activities) {
-		
+
 		availableModel = new DefaultListModel<Activity>();
-		
+
 		if (!activities.isEmpty()) {	
 			for(Activity activity : activities) {
 				availableModel.addElement(activity);
@@ -332,9 +332,9 @@ public class ProjectPanel extends JPanel {
 	}
 
 	public void updateChosenPrereqEntries(ArrayList<Activity> activities) {
-		
+
 		chosenModel = new DefaultListModel<Activity>();
-		
+
 		if (!activities.isEmpty()) {
 			for(Activity activity : activities) {
 				chosenModel.addElement(activity);
@@ -343,17 +343,17 @@ public class ProjectPanel extends JPanel {
 			chosenPrereqs.setCellRenderer(new PreReqListCellRenderer());	
 		}
 	}
-	
-	
+
+
 	//-------------  L I S T E N E R S ------------------------------
 	public void addNewActivityListener(ActionListener listener) {
 		addActivityButton.addActionListener(listener);
 	}
-	
+
 	public void addEditProjectListener(ActionListener listener) {
 		editProjectButton.addActionListener(listener);
 	}
-	
+
 	public void addDeleteProjectListener(ActionListener listener) {
 		deleteProjectButton.addActionListener(listener);
 	}
@@ -365,17 +365,16 @@ public class ProjectPanel extends JPanel {
 	public void addDeleteActivityListener(ActionListener listener) {
 		deleteActivityButton.addActionListener(listener);
 	}
-	
+
 	public void addChoosePrereqsListener(ActionListener listener) {
 		choosePrereqsButton.addActionListener(listener);
 	}
-<<<<<<< HEAD
-	
+
 	public void addSavePrereqsListener(ActionListener listener) {
 		savePrereqsButton.addActionListener(listener);
 	}
 
-	
+
 	public class PreReqListCellRenderer extends DefaultListCellRenderer {
 		public Component getListCellRendererComponent(JList<?> list,
 				Object value,
@@ -390,10 +389,8 @@ public class ProjectPanel extends JPanel {
 			return this;
 		}
 	}
-	 
-	
-=======
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
+
+
 }
 
 

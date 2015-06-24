@@ -85,28 +85,18 @@ public class Database {
 				"CREATE TABLE IF NOT EXISTS Members (Name TEXT PRIMARY KEY NOT NULL, Email TEXT UNIQUE, Role TEXT,"
 						+ "Username TEXT UNIQUE, Password TEXT);" ,
 
-						"CREATE TABLE IF NOT EXISTS Projects (ID INTEGER PRIMARY KEY AUTOINCREMENT, ManagerUsername TEXT NOT NULL, Name TEXT NOT NULL, Description TEXT, "
-								+ "Status TEXT, Budget DOUBLE, StartDate TEXT, EndDate TEXT);" ,
+				"CREATE TABLE IF NOT EXISTS Projects (ID INTEGER PRIMARY KEY AUTOINCREMENT, ManagerUsername TEXT NOT NULL, Name TEXT NOT NULL, Description TEXT, "
+						+ "Status TEXT, Budget DOUBLE, StartDate TEXT, EndDate TEXT);" ,
 
-<<<<<<< HEAD
-				"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT, ProjectID INTEGER NOT NULL, Name TEXT UNIQUE,"
-						+ "Description TEXT, Budget DOUBLE, Duration TEXT, Status TEXT);",
 
-				"CREATE TABLE IF NOT EXISTS PreReqActivities (ActivityID INTEGER NOT NULL, PreReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
+				"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT,projectID INTEGER NOT NULL, Name TEXT,"
+						+ "Description TEXT, Budget DOUBLE, Duration INTEGER, EarliestStart INTEGER, EarliestFinish INTEGER, LatestStart INTEGER, LatestFinish INTEGER, Status TEXT);",
+
+				"CREATE TABLE IF NOT EXISTS PreReqActivities (activityID INTEGER NOT NULL, preReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
 						+ " REFERENCES Activities(ID) ON DELETE CASCADE, FOREIGN KEY(preReqID) REFERENCES Activities(ID) ON DELETE CASCADE);",
 
 				"CREATE TRIGGER IF NOT EXISTS DeleteProject BEFORE DELETE ON Projects BEGIN DELETE FROM Activities WHERE ID IN "
-						+ "(SELECT ID FROM Activities WHERE ProjectID = OLD.ID); END;" 
-=======
-								"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT,projectID INTEGER NOT NULL, Name TEXT,"
-										+ "Description TEXT, Budget DOUBLE, Duration INTEGER, EarliestStart INTEGER, EarliestFinish INTEGER, LatestStart INTEGER, LatestFinish INTEGER, Status TEXT);",
-
-										"CREATE TABLE IF NOT EXISTS PreReqActivities (activityID INTEGER NOT NULL, preReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
-												+ " REFERENCES Activities(ID) ON DELETE CASCADE, FOREIGN KEY(preReqID) REFERENCES Activities(ID) ON DELETE CASCADE);",
-
-												"CREATE TRIGGER IF NOT EXISTS DeleteProject BEFORE DELETE ON Projects BEGIN DELETE FROM Activities WHERE ID IN "
-														+ "(SELECT ID FROM Activities WHERE projectID = OLD.ID); END;" 
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
+						+ "(SELECT ID FROM Activities WHERE projectID = OLD.ID); END;" 
 		};
 
 		try {
@@ -453,11 +443,9 @@ public class Database {
 			int latestStart, int latestFinish, String status) {
 
 		try {
-<<<<<<< HEAD
-			String query = "INSERT INTO Activities (ProjectID, Name,Description,Budget,Duration,Status) VALUES (?,?,?,?,?,?);"; 
-=======
+
 			String query = "INSERT INTO Activities (projectID,Name,Description,Budget,Duration,EarliestStart,EarliestFinish,LatestStart,LatestFinish,Status) VALUES (?,?,?,?,?,?,?,?,?,?);"; 
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
+
 			prepStatement = connection.prepareStatement(query);
 			prepStatement.setInt(1, projectID);
 			prepStatement.setString(2, name);

@@ -79,21 +79,6 @@ public class MainController {
 	private JTable getProjectTable() {
 		return mainView.getStartupView().getAppView().getProjectTable();
 	}
-	/**
-	 * Returns the activity Frame from the ProjectPanel
-	 * @return
-	 */
-	private ActivityFrame getActivityFrame() {
-		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
-	}
-	
-	/**
-	 * Returns the project Table from MainApplicationView.
-	 * @return
-	 */
-	private JTable getProjectTable() {
-		return mainView.getStartupView().getAppView().getProjectTable();
-	}
 
 	/**
 	 * Returns the activity Table from DisplayPanel.
@@ -103,42 +88,22 @@ public class MainController {
 		return mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getActivityTable();
 	}
 
-<<<<<<< HEAD
+	/**
+	 * Returns the activity Frame from the ProjectPanel
+	 * @return
+	 */
+	private ActivityFrame getActivityFrame() {
+		return mainView.getStartupView().getAppView().getProjectPanel().getActivityFrame();
+	}
+
+
 	private JList<Activity> getAvailableActivitiesTable() {
 		return mainView.getStartupView().getAppView().getProjectPanel().getAvailableActivitiesList();
 	}
 
 
-=======
-	//***************************************************Update Methods************************************************************
-	/**
-	 * Updates the project display panel which includes project and activity information.
-	 */
-	private void updateProjectDisplay() {
-
-		updateProjectTable();
-		updateActivityTable();
-		mainView.getStartupView().getAppView().updateDisplayPanel();
-	}
-
-	/**
-	 * Updates the project table whenever a project is added, deleted or edited.
-	 */
-	private void updateProjectTable(){
-		ResultSet results = mainModel.updateProjectTable(currentUser);
-		getProjectTable().setModel(DbUtils.resultSetToTableModel(results));
-	}
-
-	/**
-	 * Updates the activity table whenever an activity is added, deleted or edited.
-	 */
-	private void updateActivityTable(){
-		ResultSet results = mainModel.updateActivityTable(currentProject.getID());
-		getActivityTable().setModel(DbUtils.resultSetToTableModel(results));
-	}
-
 	//*************************************************Registering all listeners******************************************
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
+
 	/**
 	 * Contains all listeners for the application.
 	 */
@@ -158,13 +123,14 @@ public class MainController {
 		mainView.getStartupView().getAppView().getProjectPanel().addChoosePrereqsListener(new ChoosePrereqsListener());
 	}
 
-	//***************************************************Helper Methods************************************************************
+
+	//***************************************************Update Methods************************************************************
 
 	/**
 	 * To check if an item has been selected before editing or deleting. 
 	 * @return
 	 */
-<<<<<<< HEAD
+
 	private void updateProjectDisplay() {
 
 		updateProjectTable();
@@ -182,12 +148,9 @@ public class MainController {
 		ResultSet results = mainModel.getResultSetForAllActivitiesOfProject(currentProject.getID());
 		getActivityTable().setModel(DbUtils.resultSetToTableModel(results));
 	}
-	
+
 	private void updatePrereqTable(String selectedActivity) {
-		//update available activity table and seleted activities table
-		/*ResultSet results = mainModel.getAvailableActivities(currentProject.getID(), selectedActivity);
-		getAvailableActivitiesTable().setModel(DbUtils.resultSetToTableModel(results));
-		*/
+
 		ArrayList<Activity> availableChoices, selectedPrereqs;
 		try {
 			availableChoices = mainModel.getAvailableActivities(currentProject.getID(), selectedActivity);
@@ -199,7 +162,10 @@ public class MainController {
 			JOptionPane.showMessageDialog(null, "No available prereqs!");
 		}
 	}
-=======
+
+
+	//***************************************************Helper Methods************************************************************
+
 	private boolean isAnythingSelected()
 	{
 		if (selectedActivityName == null) //This is always null ...need to change the condition.
@@ -221,7 +187,6 @@ public class MainController {
 			else
 				isReady = mainView.getStartupView().getAppView().isJobFormReady();
 		}
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
 
 		if(classType == 2){
 			try {
@@ -606,18 +571,15 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); 
-<<<<<<< HEAD
 			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();	
 			updatePrereqTable(selectedActivityName); 
 		}		
 	}
-=======
-			//Implement method to set the tables accordingly --- doing this next
-			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();
->>>>>>> b6cce747c6686d2e0af7701cc233c798bcfd6fad
 
-		}
 
-	}
+
 }
+
+
+
 
