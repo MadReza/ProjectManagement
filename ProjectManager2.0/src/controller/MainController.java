@@ -8,6 +8,7 @@ import java.awt.event.ItemListener;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 /*import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;*/
@@ -69,6 +70,14 @@ public class MainController {
 		currentActivity = activity;
 		//	mainView.getStartupView().getAppView().setCurrentProject(project); //Update reference in MainApplicationView
 	}
+	
+	/**
+	 * Returns the project Table from MainApplicationView.
+	 * @return
+	 */
+	private JTable getProjectTable() {
+		return mainView.getStartupView().getAppView().getProjectTable();
+	}
 
 	/**
 	 * Returns the activity Table from DisplayPanel.
@@ -78,13 +87,10 @@ public class MainController {
 		return mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getActivityTable();
 	}
 
-	/**
-	 * Returns the project Table from MainApplicationView.
-	 * @return
-	 */
-	private JTable getProjectTable() {
-		return mainView.getStartupView().getAppView().getProjectTable();
+	private JList<Activity> getAvailableActivitiesTable() {
+		return mainView.getStartupView().getAppView().getProjectPanel().getAvailableActivitiesList();
 	}
+
 
 	/**
 	 * Contains all listeners for the application.
@@ -117,13 +123,30 @@ public class MainController {
 	}
 
 	private void updateProjectTable(){
-		ResultSet results = mainModel.updateProjectTable(currentUser);
+		ResultSet results = mainModel.getResultSetOfAllProjectsForUser(currentUser);
 		getProjectTable().setModel(DbUtils.resultSetToTableModel(results));
 	}
 
 	private void updateActivityTable(){
-		ResultSet results = mainModel.updateActivityTable(currentProject.getID());
+		ResultSet results = mainModel.getResultSetForAllActivitiesOfProject(currentProject.getID());
 		getActivityTable().setModel(DbUtils.resultSetToTableModel(results));
+	}
+	
+	private void updatePrereqTable(String selectedActivity) {
+		//update available activity table and seleted activities table
+		/*ResultSet results = mainModel.getAvailableActivities(currentProject.getID(), selectedActivity);
+		getAvailableActivitiesTable().setModel(DbUtils.resultSetToTableModel(results));
+		*/
+		ArrayList<Activity> availableChoices, selectedPrereqs;
+		try {
+			availableChoices = mainModel.getAvailableActivities(currentProject.getID(), selectedActivity);
+			selectedPrereqs = mainModel.getSelectedPrerequisties(selectedActivity);
+			mainView.getStartupView().getAppView().getProjectPanel().updateAvailableListEntries(availableChoices);
+			mainView.getStartupView().getAppView().getProjectPanel().updateChosenPrereqEntries(selectedPrereqs);
+		} catch (Exception e) {
+			e.printStackTrace();  
+			JOptionPane.showMessageDialog(null, "No available prereqs!");
+		}
 	}
 
 	public boolean isFormReady() {
@@ -486,17 +509,15 @@ public class MainController {
 
 	
 	/**
-	 * Implements a listener to choose prerequistes for a selected activity.
+	 * Implements a listener to choose prerequisites for a selected activity.
 	 */
 	private class ChoosePrereqsListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			selectedActivityName = mainView.getStartupView().getAppView().getProjectPanel().getDisplayPanel().getSelectedActivity(); 
-			//Implement method to set the tables accordingly --- doing this next
-			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();
-			
-		}
-		
+			mainView.getStartupView().getAppView().getProjectPanel().createPrereqsTable();	
+			updatePrereqTable(selectedActivityName); 
+		}		
 	}
 
 

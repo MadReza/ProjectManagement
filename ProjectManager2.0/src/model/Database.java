@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.*;
 
-import net.proteanit.sql.DbUtils;
+//import net.proteanit.sql.DbUtils;
 
 
 public class Database {
@@ -48,6 +48,7 @@ public class Database {
 		}
 	}
 
+	
 	/**
 	 * Disconnects the database.
 	 * @throws SQLException
@@ -62,6 +63,7 @@ public class Database {
 		}
 	}
 
+	
 	private void setStatement() throws SQLException {
 
 		if(connection == null) {
@@ -86,14 +88,14 @@ public class Database {
 				"CREATE TABLE IF NOT EXISTS Projects (ID INTEGER PRIMARY KEY AUTOINCREMENT, ManagerUsername TEXT NOT NULL, Name TEXT NOT NULL, Description TEXT, "
 						+ "Status TEXT, Budget DOUBLE, StartDate TEXT, EndDate TEXT);" ,
 
-				"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT,projectID INTEGER NOT NULL, Name TEXT UNIQUE,"
+				"CREATE TABLE IF NOT EXISTS Activities (ID INTEGER PRIMARY KEY AUTOINCREMENT, ProjectID INTEGER NOT NULL, Name TEXT UNIQUE,"
 						+ "Description TEXT, Budget DOUBLE, Duration TEXT, Status TEXT);",
 
-				"CREATE TABLE IF NOT EXISTS PreReqActivities (activityID INTEGER NOT NULL, preReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
+				"CREATE TABLE IF NOT EXISTS PreReqActivities (ActivityID INTEGER NOT NULL, PreReqID INTEGER NOT NULL, FOREIGN KEY(activityID)"
 						+ " REFERENCES Activities(ID) ON DELETE CASCADE, FOREIGN KEY(preReqID) REFERENCES Activities(ID) ON DELETE CASCADE);",
 
 				"CREATE TRIGGER IF NOT EXISTS DeleteProject BEFORE DELETE ON Projects BEGIN DELETE FROM Activities WHERE ID IN "
-						+ "(SELECT ID FROM Activities WHERE projectID = OLD.ID); END;" 
+						+ "(SELECT ID FROM Activities WHERE ProjectID = OLD.ID); END;" 
 		};
 
 		try {
@@ -147,6 +149,7 @@ public class Database {
 		return 0;
 	}
 
+	
 	/**
 	 * Inserts Member-Entry into the Members table in the database.
 	 * @param name
@@ -244,9 +247,9 @@ public class Database {
 	}
 
 	/**
-	 * 
+	 * Checks if the user already has a project with the same name.
 	 * @param name
-	 * @return
+	 * @return 0 - chosen name is unique, 1 - chosen name is unique
 	 */
 	protected int validateProjectName(String name) {
 
@@ -333,6 +336,10 @@ public class Database {
 	}
 
 
+	/**
+	 * Deletes a project from the database.
+	 * @param project
+	 */
 	protected void deleteProject(Project project) {
 		int ID = project.getID();
 		String query = "DELETE FROM Projects where ID = '" + ID + "';" ; 
@@ -355,7 +362,7 @@ public class Database {
 
 
 	/**
-	 * Retrieve all projects for the current user (manager) from the database.
+	 * Retrieves all projects for the current user (manager) from the database.
 	 */
 	protected ArrayList<Project> getAllProjects(String username) throws Exception {
 
@@ -378,7 +385,7 @@ public class Database {
 		return projectList;
 	}
 
-	protected ResultSet updateProjectTable(String username) {
+	protected ResultSet getResultSetOfAllProjectsForUser(String username) {
 		try {
 			String query = "SELECT Name FROM Projects WHERE ManagerUsername = '" + username + "' ;" ;
 			prepStatement = connection.prepareStatement(query);
@@ -420,8 +427,9 @@ public class Database {
 		return activityCounter;
 	}
 
+	
 	/**
-	 * 
+	 * Adds an activity to a selected(current) project.
 	 * @param projectID
 	 * @param name
 	 * @param description
@@ -433,7 +441,7 @@ public class Database {
 	protected void addActivity(int projectID, String name, String description, double budget,String duration, String status) {
 
 		try {
-			String query = "INSERT INTO Activities (projectID, Name,Description,Budget,Duration,Status) VALUES (?,?,?,?,?,?);"; 
+			String query = "INSERT INTO Activities (ProjectID, Name,Description,Budget,Duration,Status) VALUES (?,?,?,?,?,?);"; 
 			prepStatement = connection.prepareStatement(query);
 			prepStatement.setInt(1, projectID);
 			prepStatement.setString(2, name);
@@ -458,8 +466,9 @@ public class Database {
 		}
 	}
 
+	
 	/**
-	 * 
+	 * Updates an existing activity.
 	 * @param ID
 	 * @param name
 	 * @param description
@@ -490,8 +499,9 @@ public class Database {
 		}
 	}
 
+	
 	/**
-	 * 
+	 * Deletes an activity from the project.
 	 * @param activity
 	 */
 	protected void deleteActivity(Activity activity) {
@@ -513,17 +523,18 @@ public class Database {
 		}
 	}
 
+	
 	/**
-	 * Retrieve all activities for the current project from the database.
+	 * Retrieves all activities for the current project from the database.
 	 */
 	protected ArrayList<Activity> getAllProjectActivities(int projectID) throws Exception {
-		String query1 = "SELECT * FROM Activities WHERE projectID = '" + projectID + "' ;" ;
-		results = statement.executeQuery(query1);
+		String query = "SELECT * FROM Activities WHERE ProjectID = '" + projectID + "' ;" ;
+		results = statement.executeQuery(query);
 
 		ArrayList <Activity> activities = new ArrayList<Activity>();
 		while(results.next()) {
 			int ID = results.getInt("ID");
-			int pID = results.getInt("projectID");
+			int pID = results.getInt("ProjectID");
 			String name = results.getString("Name");
 			String description = results.getString("Description");
 			double budget = results.getDouble("Budget");
@@ -543,19 +554,63 @@ public class Database {
 	}
 
 	/**
-	 * 
+	 * Returns the set of activities for a given project
 	 * @param projectID
-	 * @return
+	 * @return result set of all activities that's associated with projectID
 	 */
-	protected ResultSet updateActivityTable(int projectID) {
+	protected ResultSet getResultSetForAllActivitiesOfProject(int projectID) {
 		try {
-			String query = " SELECT Name FROM Activities WHERE projectID = '" + projectID + "';" ;
+			String query = " SELECT Name FROM Activities WHERE ProjectID = '" + projectID + "';" ;
 			prepStatement = connection.prepareStatement(query);
 			results = prepStatement.executeQuery();		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return results;
+	}
+
+	
+	/**
+	 * Retrieves all activities that can be set as a prerequisite for the selected activity.
+	 * @param projectID
+	 * @param selectedActivityID
+	 * @return an arraylist of available activity IDs
+	 * @throws Exception
+	 */
+	protected ArrayList<Integer> getAvailableChoicesForPrerequisites(int projectID, int selectedActivityID) throws Exception {
+		
+		ArrayList<Integer> availableChoices = new ArrayList<Integer>();
+		String query = " SELECT ID FROM Activities WHERE (ProjectID = " + projectID +
+				" AND ID != " + selectedActivityID + ")" +
+				" EXCEPT " +
+				" SELECT PreReqID FROM PreReqActivities WHERE ActivityID = " + selectedActivityID + " ;" ;
+
+		results = statement.executeQuery(query);
+
+		while (results.next()) {
+			availableChoices.add(results.getInt("ID")); 
+		}
+		return availableChoices;
+	}
+
+	
+	/**
+	 * Retrieves the activities that have been set as a prerequisite for the selected activity.
+	 * @param selectedActivityID
+	 * @return an arraylist of the IDs of the activities that have already been chosen as prereqs.
+	 * @throws Exception
+	 */
+	protected ArrayList<Integer> getSelectedPrereqs(int selectedActivityID) throws Exception {
+		
+		ArrayList<Integer> selectedPrereqIDs = new ArrayList<Integer>();
+		String query = "SELECT PreReqID FROM PreReqActivities WHERE ActivityID = '" + selectedActivityID + "';" ;
+		
+		results = statement.executeQuery(query);
+
+		while(results.next()) {
+			selectedPrereqIDs.add(results.getInt("PreReqID"));	
+		}
+		return selectedPrereqIDs;	
 	}
 }
 

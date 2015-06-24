@@ -172,8 +172,8 @@ public class MainModel {
 	 * @param username
 	 * @return
 	 */
-	public ResultSet updateProjectTable(String username) {
-		return database.updateProjectTable(username);
+	public ResultSet getResultSetOfAllProjectsForUser(String username) {
+		return database.getResultSetOfAllProjectsForUser(username);
 	}
 
 
@@ -244,7 +244,7 @@ public class MainModel {
 	}
 
 	/**
-	 * Updating the activity information in the database.
+	 * Updates the activity information in the database.
 	 * @param name
 	 * @param description
 	 * @param budget
@@ -267,7 +267,7 @@ public class MainModel {
 	}
 
 	/**
-	 * Deleting a selected activity from the database.
+	 * Deletes a selected activity from the database.
 	 * @param activity
 	 */
 	public void deleteActivityFromDatabase(Activity activity) {
@@ -281,14 +281,13 @@ public class MainModel {
 
 
 	/**
-	 * To refresh the list of activities after adding/removing/editing an activity.
+	 * Returns the set of all activities for the project currently being viewed.
 	 * @param projectID
-	 * @return
+	 * @return result set of all activities of the current project.
 	 */
-	public ResultSet updateActivityTable(int projectID) {
-		return database.updateActivityTable( projectID);
+	public ResultSet getResultSetForAllActivitiesOfProject(int projectID) {
+		return database.getResultSetForAllActivitiesOfProject( projectID);
 	}
-
 
 
 	public Activity getActivityByName(String selectedActivity) {
@@ -306,55 +305,92 @@ public class MainModel {
 		return null;
 	}
 
+	
 	/**
 	 * Retrieving all activities associated to a project from the database.
 	 * @return
 	 * @throws Exception
 	 */
-	public ArrayList<Activity> getAllActivities() throws Exception {
-		return database.getAllProjectActivities(currentProject.getID());
+	public ArrayList<Activity> getAllActivities() {
+		try {
+			return database.getAllProjectActivities(currentProject.getID());
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return allProjectActivities;
 	}
 
+	
 	/**
 	 * Retrieving a specific activity by it's ID which is auto-incremented in the database.
 	 * @param aID
 	 * @return
 	 * @throws Exception
 	 */
-	protected Activity getActivityByID(int aID) throws Exception {
-		return getAllActivities().get(aID);
+	protected Activity getActivityByID(int activityID) {
+		try {
+			allProjectActivities = getAllActivities();
+			for(Activity activity : allProjectActivities) {
+				if (activity.getID() == activityID) {
+					return activity;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
-	/*private boolean ActivitySuitsProject(int aID, int pID, String message) throws Exception {
+	
+	/**
+	 * Construct an arraylist of activities associated with the activityIDs.
+	 * @param activityIDs
+	 * @return arraylist of activities.
+	 */
+	private ArrayList<Activity> constructArrayListOfActivities(ArrayList<Integer> activityIDs) {
+		ArrayList<Activity> activities = new ArrayList<Activity>();
+		if (!activityIDs.isEmpty()) {
+			for(int activityID : activityIDs) {
+				activities.add(getActivityByID(activityID));
+			}	
+		}
+		return activities;	
+	}
 
-		Activity activity = getActivityByID(aID);
-		Project project = getProjectByID(pID);
+	
+	/**
+	 * Retrieves activites that can be set as prerequisites.
+	 * @param id
+	 * @param activityName
+	 * @return arraylist of available activities.
+	 * @throws Exception
+	 */
+	public ArrayList<Activity> getAvailableActivities(int id, String activityName) throws Exception {
+		int selectedActivityID = getActivityByName(activityName).getID();
+		ArrayList<Activity> availableActivities = new ArrayList<Activity>();
+		ArrayList<Integer> availableChoices;
+	
+		availableChoices = database.getAvailableChoicesForPrerequisites(id, selectedActivityID);
+		return constructArrayListOfActivities(availableChoices);
+	}
 
+	
+	/**
+	 * Retrieves activities that have been set as prerequisites.
+	 * @param activityName
+	 * @return arraylist of chosen activities
+	 * @throws Exception
+	 */
+	public ArrayList<Activity> getSelectedPrerequisties(String activityName) throws Exception {
+		int selectedActivityID = getActivityByName(activityName).getID();
+		ArrayList<Activity> chosenPrereqs = new ArrayList<Activity>();
+		ArrayList<Integer> chosenPrereqIDs;
+	
+		chosenPrereqIDs = database.getSelectedPrereqs(selectedActivityID);
+		return constructArrayListOfActivities(chosenPrereqIDs);
+	}
 
-		// checks prerequisites
-		if (! activity.getPreReq().isEmpty() ){
-			message = "Adjust: The activity has prerequisites";
-			return false;
-			}
-
-		// checks successors
-		 if(! activity.getSuccessors().isEmpty() ) {
-			 message = "Adjust: The activity has successors";
-			 return false;
-		 }
-
-		// Check dates boundaries  already checked in the constructors
-		if (activity.getStartDate().compareTo(project.getStartDate()) < 0) {
-			message = "Adjust: the Activity can't precede its parent project";
-			return false;
-			}
-
-		if (activity.getEndDate().compareTo(project.getEndDate()) > 0) {
-			message = "Adjust: the Activity Finish date can't follow its parent project Finish date";
-			return false;
-			}
-		// otherwise
-		return true;
-	}*/
+	
 
 }
