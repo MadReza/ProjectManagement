@@ -28,9 +28,6 @@ public class Activity {
 		setLatestStart(LS);
 		setLatestFinish(LF);
 		setBudget(budget);
-
-		//setStartDate(startDate);
-		//setFinishDate(finishDate);
 		setStatus(Status.LOCKED);				// any activity is locked by default until checking its prerequisites are finished
 	}
 
