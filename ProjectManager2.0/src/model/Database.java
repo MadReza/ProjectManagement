@@ -624,10 +624,11 @@ public class Database {
 		String query = " SELECT ID FROM Activities WHERE (ProjectID = " + projectID +
 				" AND ID != " + selectedActivityID + ")" +
 				" EXCEPT " +
-				" SELECT PrereqID FROM PrereqActivities WHERE ActivityID = " + selectedActivityID + " ;" ;
+				" SELECT PrereqID FROM PrereqActivities WHERE ActivityID = " + selectedActivityID + ";";
+			//	" OR SELECT ActivityID FROM PrereqActivities WHERE PrereqID = " + selectedActivityID + " ;" ;
 
 		results = statement.executeQuery(query);
-
+ 
 		while (results.next()) {
 			availableChoices.add(results.getInt("ID")); 
 		}

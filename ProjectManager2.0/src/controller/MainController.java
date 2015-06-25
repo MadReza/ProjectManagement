@@ -265,7 +265,7 @@ public class MainController {
 			try {
 				if (mainModel.validateLoginInformation(user, pass)) {
 
-					JOptionPane.showMessageDialog(null, "Project Manager Login Successful!");
+				//	JOptionPane.showMessageDialog(null, "Project Manager Login Successful!");
 					setCurrentUser(user);
 					mainView.getStartupView().switchToMainAppView();
 				}
