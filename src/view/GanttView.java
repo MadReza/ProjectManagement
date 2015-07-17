@@ -128,6 +128,11 @@ public class GanttView extends JFrame {
 	}
        
 }
+<<<<<<< HEAD
+=======
+       
+
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 
            
        
