@@ -25,7 +25,10 @@ public class MainModel {
 	private MainModel() throws Exception {
 		
 		database = new Database();
+<<<<<<< HEAD
+=======
 		
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	}
 	
 	// ensures only one instance (singleton) is created 
@@ -226,8 +229,11 @@ public class MainModel {
 			// "Adjust: the Activity can't precede its parent project";
 			
 			if (sdf.parse(activity.getStartDate()).before(sdf.parse(parentProject.getStartDate()))) {
+<<<<<<< HEAD
+=======
 				System.out.println("activity" + activity.getStartDate());
 				System.out.println("parent" + parentProject.getStartDate());
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 				return 1;
 				}
 			

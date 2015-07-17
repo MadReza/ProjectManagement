@@ -3,10 +3,23 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="resource/sqlite-jdbc-3.8.10.1.jar"/>
+	<classpathentry kind="lib" path="resource/jdatepicker-1.3.4.jar"/>
+	<classpathentry kind="lib" path="resource/jcommon-1.0.23.zip"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19.zip"/>
+	<classpathentry kind="lib" path="resource/junit-4.12.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jfreechart-1.0.19-experimental.jar"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jfreechart-1.0.19-swt.jar"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar"/>
+=======
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="resource/jdatepicker-1.3.4.jar"/>
 	<classpathentry kind="lib" path="resource/sqlite-jdbc-3.8.10.1.jar"/>
 	<classpathentry kind="lib" path="resource/jcommon-1.0.23.jar"/>
 	<classpathentry kind="lib" path="resource/jfreechart-1.0.19.jar"/>
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	<classpathentry kind="output" path="bin"/>
 </classpath>

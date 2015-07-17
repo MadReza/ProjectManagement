@@ -10,16 +10,30 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+<<<<<<< HEAD
+=======
 import java.awt.event.ActionEvent;
 
 import javax.swing.JPasswordField;
 import javax.swing.SwingConstants;
 
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 @SuppressWarnings("serial")
 public class Login extends JFrame {
 
 	private SignupPage signupFrame;
 	private JTextField usernameTextField;
+<<<<<<< HEAD
+	private JTextField PasswordTextField;
+	private JButton loginButton, registerBtn;
+	private JPanel loginPanel;
+
+	public Login(){
+		// MainFrame setup (title, layout, dimensions)
+		super("My Project Manager");							// calls super constructor in JFrame and assigning application title
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);			// the application doesn't exit on closing by default
+		setSize(500, 380);										// sets default size for card1
+=======
 	private JPasswordField passwordField;
 	private JButton loginButton, signUpBtn;
 	private JPanel loginPanel;
@@ -28,10 +42,58 @@ public class Login extends JFrame {
 		super("My Project Manager");							// calls super constructor in JFrame and assigning application title
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);			// the application doesn't exit on closing by default
 		setBounds(100, 100, 1200, 700);							// sets default size for card1					
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 		setVisible(true);										// JFrame is invisible by default
 		setResizable(false);
 
 		loginPanel = new JPanel();
+<<<<<<< HEAD
+		loginPanel.setBackground(Color.getHSBColor(2.43f, 0.8f, 0.7f));
+		loginPanel.setLayout(null);
+		
+		
+		//Login Panel Attributes
+		JLabel usernameLabel = new JLabel("User Name");
+		usernameLabel.setFont(new Font("Courier New Bold Italic", Font.BOLD, 18));
+		usernameLabel.setBounds(30, 30, 200, 30);
+		loginPanel.add(usernameLabel);
+
+		usernameTextField = new JTextField(15);
+		usernameTextField.setFont(new Font("Serif Bold", Font.BOLD, 18));
+		usernameTextField.setBounds(250, 30, 200, 30);
+		usernameTextField.setForeground(Color.getHSBColor(4.86f, 0.9f, 0.9f));
+		usernameTextField.setText("a");				// for testing only .... remove
+		loginPanel.add(usernameTextField);
+
+		JLabel passwordLabel = new JLabel("Password");
+		passwordLabel.setFont(new Font("Courier New Bold Italic", Font.BOLD, 18));
+		passwordLabel.setBounds(30, 90, 200, 30);
+		loginPanel.add(passwordLabel);
+
+		PasswordTextField = new JTextField(15);
+		PasswordTextField.setFont(new Font("Serif Bold", Font.BOLD, 18));
+		PasswordTextField.setBounds(250, 90, 200, 30);
+		PasswordTextField.setForeground(Color.getHSBColor(4.86f, 0.9f, 0.9f));
+		PasswordTextField.setText("a");			// for testing only .... remove
+		loginPanel.add(PasswordTextField);
+
+		loginButton = new JButton("LOG IN");
+		loginButton.setFont(new Font("Courier New Bold Italic", Font.BOLD, 18));
+		loginButton.setBounds(30, 170, 200, 40);
+//		loginButton.setBorder(BorderFactory.createRaisedBevelBorder());
+//		loginButton.setBackground(Color.getHSBColor(2.1f, 0.9f, 0.9f));
+		loginPanel.add(loginButton);
+
+		signupFrame = new SignupPage();
+		registerBtn = new JButton("REGISTER");
+		registerBtn.setFont(new Font("Courier New Bold Italic", Font.BOLD, 18));
+		registerBtn.setBounds(250, 170, 200, 40);
+		loginPanel.add(registerBtn);
+		
+		getContentPane().add(loginPanel);
+	}
+	
+=======
 		loginPanel.setBackground(new Color(25, 25, 112));
 		loginPanel.setLayout(null);
 		//loginPanel.setBounds(0, 0, 1194, 671);
@@ -87,21 +149,47 @@ public class Login extends JFrame {
 		getContentPane().add(loginPanel);
 	}
 
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	public JButton getLoginBtn() {
 		return loginButton;
 	}
 
+<<<<<<< HEAD
+	public String getUsername(){
+=======
 	public String getUsernameTextField(){
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 		return usernameTextField.getText();
 	}
 
 	public String getPassword(){
+<<<<<<< HEAD
+		return PasswordTextField.getText();
+=======
 		return (new String (passwordField.getPassword()));
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	}
 
 	public SignupPage getSignupFrame(){
 		return signupFrame;
 	}
+<<<<<<< HEAD
+	
+	public void clearLoginForm(){
+		usernameTextField.setText("");
+		PasswordTextField.setText("");
+	}
+	
+
+	// adds an action listener to the login button
+	public void addLoginListener(ActionListener aListener){
+
+		loginButton.addActionListener(aListener); 
+	}
+	
+	public void addRegisterBtnListener(ActionListener aListener){
+		registerBtn.addActionListener(aListener);
+=======
 
 	public void clearLoginForm(){
 		usernameTextField.setText("");
@@ -115,6 +203,7 @@ public class Login extends JFrame {
 
 	public void addRegisterBtnListener(ActionListener aListener){
 		signUpBtn.addActionListener(aListener);
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	}
 
 }

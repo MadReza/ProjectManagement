@@ -2,6 +2,10 @@ package view;
 
 import java.awt.Color;
 import java.awt.Component;
+<<<<<<< HEAD
+import java.awt.Dimension;
+=======
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -9,6 +13,10 @@ import java.util.Enumeration;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+<<<<<<< HEAD
+import javax.swing.event.TreeModelListener;
+=======
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -28,11 +36,19 @@ public class TreePanel extends JPanel {
 	private DefaultTreeModel modelTree;
 	private DefaultMutableTreeNode treeRoot;
 
+<<<<<<< HEAD
+	private ArrayList<Project> treeProjects;
+	
+	public TreePanel() {
+		
+		treeProjects = new ArrayList<Project>();
+=======
 	private ArrayList<Project> mProjects;
 	
 	public TreePanel() {
 		
 		mProjects = new ArrayList<Project>();
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 		buildTree();
 	}
 	
@@ -45,7 +61,10 @@ public class TreePanel extends JPanel {
 		viewTree = new JTree(modelTree);
 		viewTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 	
+<<<<<<< HEAD
+=======
         
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 		// Tree Border
 		viewTree.setBorder(BorderFactory.createLoweredBevelBorder());
 		viewTree.setExpandsSelectedPaths(true);
@@ -54,6 +73,10 @@ public class TreePanel extends JPanel {
 		viewTree.setBackground(Color.getHSBColor(0.1f, 0.3f, 0.9f));
 
 		// Fonts
+<<<<<<< HEAD
+		viewTree.setMinimumSize(new Dimension(250,250));
+=======
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 		viewTree.setFont(new Font("Arial Black", Font.BOLD, 18));
 		
 		// Foreground
@@ -78,7 +101,11 @@ public class TreePanel extends JPanel {
 
 		try {
 						
+<<<<<<< HEAD
+			for(Project proj: treeProjects){
+=======
 			for(Project proj: mProjects){
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 				
 				projectNode = new DefaultMutableTreeNode(proj);
 
@@ -94,14 +121,27 @@ public class TreePanel extends JPanel {
 			}
 			
 		} catch (Exception e) {
+<<<<<<< HEAD
+=======
 			// TODO Auto-generated catch block
 
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 			e.printStackTrace();
 		}
 
 	}
 	
 	public void refreshTree() {
+<<<<<<< HEAD
+		
+		treeRoot.removeAllChildren();
+		populateTree();
+		reloadTree();
+	}
+	
+	public void reloadTree(){
+		modelTree.reload(treeRoot);
+=======
 		remove(viewTree);
 		buildTree();
 		
@@ -110,20 +150,30 @@ public class TreePanel extends JPanel {
 		modelTree.reload(treeRoot);
 		*/
 //		viewTree.setModel(modelTree);
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	}
 	
 	public JTree getTree() {
 		return viewTree;
 	}
 
+<<<<<<< HEAD
+=======
 	public DefaultTreeModel getModelTree() {
 		return modelTree;
 	}
 
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	public void addTreeSelectionListener(TreeSelectionListener tsl) {
 		viewTree.addTreeSelectionListener(tsl);
 	}
 	
+<<<<<<< HEAD
+	public void addTreeSelectionListener(TreeModelListener tml){
+		modelTree.addTreeModelListener(tml);
+	}
+
+=======
 /*	public void addTreeSelectionListener(TreeModelListener tml){
 		modelTree.addTreeModelListener(tml);
 	}
@@ -135,6 +185,7 @@ public class TreePanel extends JPanel {
 	public void setmProjects(ArrayList<Project> mProjects) {
 		this.mProjects = mProjects;
 	}
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 
 	public DefaultMutableTreeNode getTreeRoot() {
 		return treeRoot;
@@ -162,6 +213,21 @@ public class TreePanel extends JPanel {
 	    return null; 
 	}
 	
+<<<<<<< HEAD
+	public DefaultTreeModel getModelTree() {
+		return modelTree;
+	}
+
+	public ArrayList<Project> getTreeProjects() {
+		return treeProjects;
+	}
+
+	public void setTreeProjects(ArrayList<Project> treeProjects) {
+		this.treeProjects = treeProjects;
+	}
+	
+=======
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	public class MyCellRenderer extends DefaultTreeCellRenderer {
 
 	    @Override
@@ -176,7 +242,11 @@ public class TreePanel extends JPanel {
 
 	    @Override
 	    public Color getBackground() {
+<<<<<<< HEAD
+	        return (Color.getHSBColor(0.1f, 0.3f, 0.9f));
+=======
 	        return (null);
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	    }
 
 	    @Override
@@ -188,5 +258,8 @@ public class TreePanel extends JPanel {
 	        return ret;
 	    }
 	}
+<<<<<<< HEAD
+=======
 	
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 }
