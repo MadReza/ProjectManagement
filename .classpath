@@ -9,5 +9,9 @@
 	<classpathentry kind="lib" path="resource/jfreechart-1.0.19.zip"/>
 	<classpathentry kind="lib" path="resource/junit-4.12.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jcommon-1.0.23.jar"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jfreechart-1.0.19-experimental.jar"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jfreechart-1.0.19-swt.jar"/>
+	<classpathentry kind="lib" path="resource/jfreechart-1.0.19/lib/jfreechart-1.0.19.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

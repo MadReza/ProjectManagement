@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -9,6 +10,7 @@ import java.util.Enumeration;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JTree;
+import javax.swing.event.TreeModelListener;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
@@ -28,11 +30,11 @@ public class TreePanel extends JPanel {
 	private DefaultTreeModel modelTree;
 	private DefaultMutableTreeNode treeRoot;
 
-	private ArrayList<Project> mProjects;
+	private ArrayList<Project> treeProjects;
 	
 	public TreePanel() {
 		
-		mProjects = new ArrayList<Project>();
+		treeProjects = new ArrayList<Project>();
 		buildTree();
 	}
 	
@@ -45,7 +47,6 @@ public class TreePanel extends JPanel {
 		viewTree = new JTree(modelTree);
 		viewTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 	
-        
 		// Tree Border
 		viewTree.setBorder(BorderFactory.createLoweredBevelBorder());
 		viewTree.setExpandsSelectedPaths(true);
@@ -54,6 +55,7 @@ public class TreePanel extends JPanel {
 		viewTree.setBackground(Color.getHSBColor(0.1f, 0.3f, 0.9f));
 
 		// Fonts
+		viewTree.setMinimumSize(new Dimension(250,250));
 		viewTree.setFont(new Font("Arial Black", Font.BOLD, 18));
 		
 		// Foreground
@@ -78,7 +80,7 @@ public class TreePanel extends JPanel {
 
 		try {
 						
-			for(Project proj: mProjects){
+			for(Project proj: treeProjects){
 				
 				projectNode = new DefaultMutableTreeNode(proj);
 
@@ -94,22 +96,20 @@ public class TreePanel extends JPanel {
 			}
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-
 			e.printStackTrace();
 		}
 
 	}
 	
 	public void refreshTree() {
-		remove(viewTree);
-		buildTree();
 		
-/*		treeRoot.removeAllChildren();
+		treeRoot.removeAllChildren();
 		populateTree();
+		reloadTree();
+	}
+	
+	public void reloadTree(){
 		modelTree.reload(treeRoot);
-		*/
-//		viewTree.setModel(modelTree);
 	}
 	
 	public JTree getTree() {
@@ -120,17 +120,10 @@ public class TreePanel extends JPanel {
 		viewTree.addTreeSelectionListener(tsl);
 	}
 	
-/*	public void addTreeSelectionListener(TreeModelListener tml){
+	public void addTreeSelectionListener(TreeModelListener tml){
 		modelTree.addTreeModelListener(tml);
 	}
-*/
-	public ArrayList<Project> getmProjects() {
-		return mProjects;
-	}
 
-	public void setmProjects(ArrayList<Project> mProjects) {
-		this.mProjects = mProjects;
-	}
 
 	public DefaultMutableTreeNode getTreeRoot() {
 		return treeRoot;
@@ -158,6 +151,18 @@ public class TreePanel extends JPanel {
 	    return null; 
 	}
 	
+	public DefaultTreeModel getModelTree() {
+		return modelTree;
+	}
+
+	public ArrayList<Project> getTreeProjects() {
+		return treeProjects;
+	}
+
+	public void setTreeProjects(ArrayList<Project> treeProjects) {
+		this.treeProjects = treeProjects;
+	}
+	
 	public class MyCellRenderer extends DefaultTreeCellRenderer {
 
 	    @Override
@@ -172,7 +177,7 @@ public class TreePanel extends JPanel {
 
 	    @Override
 	    public Color getBackground() {
-	        return (null);
+	        return (Color.getHSBColor(0.1f, 0.3f, 0.9f));
 	    }
 
 	    @Override

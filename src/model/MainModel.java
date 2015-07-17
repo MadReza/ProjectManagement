@@ -25,7 +25,6 @@ public class MainModel {
 	private MainModel() throws Exception {
 		
 		database = new Database();
-		
 	}
 	
 	// ensures only one instance (singleton) is created 

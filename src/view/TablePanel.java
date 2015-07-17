@@ -20,6 +20,7 @@ public class TablePanel extends JPanel {
 
 	private JTable table;
 	private ProjectTableModel tableModel;
+	ArrayList<Project> allProjects;
 	
 	public TablePanel(){
 		

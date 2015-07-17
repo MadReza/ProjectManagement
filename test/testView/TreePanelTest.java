@@ -35,9 +35,9 @@ public class TreePanelTest {
 		managerProjects.add(project);
 		managerProjects.add(_project);
 		
-		tree.setmProjects(managerProjects);
+		tree.setTreeProjects(managerProjects);
 		
-		assertEquals("Project managers should be equal", managerProjects, tree.getmProjects());
+		assertEquals("Project managers should be equal", managerProjects, tree.getTreeProjects());
 	}
 
 	@Test
@@ -51,9 +51,9 @@ public class TreePanelTest {
 		managerProjects.add(project);
 		managerProjects.add(_project);
 		
-		tree.setmProjects(managerProjects);
+		tree.setTreeProjects(managerProjects);
 		
-		assertEquals("Project managers should be equal", managerProjects, tree.getmProjects());
+		assertEquals("Project managers should be equal", managerProjects, tree.getTreeProjects());
 	}
 
 }

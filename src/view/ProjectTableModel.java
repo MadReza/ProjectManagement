@@ -6,18 +6,17 @@ import javax.swing.table.AbstractTableModel;
 
 import model.Project;
 
-@SuppressWarnings("serial")
 public class ProjectTableModel extends AbstractTableModel {
 
-	private ArrayList<Project> allProjects;
+	private ArrayList<Project> tableProjects;
 	private String[] colNames = {"Name" , "Description" , "Budget" , "Start Date" , "Finish Date" , "Status"};
 	
 	public ProjectTableModel(){
-		allProjects = new ArrayList<Project>();
+		tableProjects = new ArrayList<Project>();
 	}
 	
 	public void setData(ArrayList<Project> allProjects){
-		this.allProjects = allProjects;
+		this.tableProjects = allProjects;
 	}
 	
 	public String getColumnName(int column) {
@@ -32,15 +31,15 @@ public class ProjectTableModel extends AbstractTableModel {
 
 	public int getRowCount() {
 		
-		if(!allProjects.isEmpty()){
-			return allProjects.size();
+		if(!tableProjects.isEmpty()){
+			return tableProjects.size();
 		}
 		return 0;
 	}
 
 	public Object getValueAt(int row, int col) {
 		
-		Project project = allProjects.get(row);
+		Project project = tableProjects.get(row);
 		
 		switch(col){
 		case 0:	
@@ -58,5 +57,15 @@ public class ProjectTableModel extends AbstractTableModel {
 		}
 		return null;
 	}
+	
 
+	public ArrayList<Project> getTableProjects() {
+		return tableProjects;
+	}
+
+	public void setTableProjects(ArrayList<Project> tableProjects) {
+		this.tableProjects = tableProjects;
+	}
+	
+	
 }
