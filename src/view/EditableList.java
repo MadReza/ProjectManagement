@@ -9,6 +9,10 @@ import java.util.ArrayList;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+<<<<<<< HEAD
+=======
+import javax.swing.DefaultListCellRenderer;
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,12 +46,21 @@ public class EditableList<T> extends JFrame {
 	    availableList = new JList<T>(availableListModel);	    
 	    availableList.setBackground(Color.getHSBColor(0.22f, 0.7f, 0.88f));
 	    availableList.setBorder(BorderFactory.createEtchedBorder());
+<<<<<<< HEAD
+=======
+	    DefaultListCellRenderer renderer = (DefaultListCellRenderer) availableList.getCellRenderer();
+	    renderer.setHorizontalAlignment(JLabel.CENTER);
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	    JScrollPane scrollListAll = new JScrollPane(availableList);
 	    Box availableListBox = new Box(BoxLayout.Y_AXIS);
 //	    availableListBox.setSize(200, 200);
 //	    availableListBox.setMinimumSize(new Dimension(150, 100));
 	    availableListBox.add(scrollListAll);
+<<<<<<< HEAD
 	    availableListBox.add(new JLabel("Available"));
+=======
+	    availableListBox.add(new JLabel("Available Members"));
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 
 	    // List of Team Members assigned to an activity
 	    assignedListModel = new DefaultListModel<T>();
@@ -58,12 +71,21 @@ public class EditableList<T> extends JFrame {
 	    assignedList = new JList<T>(assignedListModel);
 	    assignedList.setBackground(Color.getHSBColor(0.58f, 0.7f, 0.88f));
 	    assignedList.setBorder(BorderFactory.createEtchedBorder());
+<<<<<<< HEAD
+=======
+	    DefaultListCellRenderer renderer2 = (DefaultListCellRenderer) assignedList.getCellRenderer();
+	    renderer2.setHorizontalAlignment(JLabel.CENTER);
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	    JScrollPane scrollListTeam = new JScrollPane(assignedList);
 	    Box assignedListBox = new Box(BoxLayout.Y_AXIS);
 	    assignedListBox.setSize(200, 200);
 	    assignedListBox.setMinimumSize(new Dimension(150, 100));
 	    assignedListBox.add(scrollListTeam);
+<<<<<<< HEAD
 	    assignedListBox.add(new JLabel("Existing"));
+=======
+	    assignedListBox.add(new JLabel("Existing Members"));
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	    
 	    // Lists Separator and Buttons
 	    Box separatorBox = new Box(BoxLayout.Y_AXIS);

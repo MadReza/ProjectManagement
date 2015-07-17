@@ -5,6 +5,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+<<<<<<< HEAD
+=======
+import java.awt.Graphics;
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
@@ -13,6 +17,10 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 import javax.swing.BorderFactory;
+<<<<<<< HEAD
+=======
+import javax.swing.DefaultListCellRenderer;
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -249,10 +257,18 @@ public class MainView extends JFrame {
 	public void addExitItemListener(ActionListener aListener){
 		exitItem.addActionListener(aListener);
 	}
+<<<<<<< HEAD
 
 	public void addGantItemListener(ActionListener aListener){
 		gantItem.addActionListener(aListener);
 	}
+=======
+	
+	public void addGantItemListener(ActionListener aListener){
+		gantItem.addActionListener(aListener);
+	}
+
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 	////////////////////////////////////////////////////////////////	Getters and Setters	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	public JComboBox<Project> getExistingProjectsCombo() {
@@ -309,9 +325,16 @@ public class MainView extends JFrame {
 		return exitItem;
 	}
 
+<<<<<<< HEAD
 	public JMenuBar getTheMenuBar() {
 		return menuBar;
 	}
 
 	
+=======
+	public JMenuItem getGantItem() {
+		return gantItem;
+	}
+
+>>>>>>> 7335317999b66617b53caf2e07915a8d918b402e
 }
