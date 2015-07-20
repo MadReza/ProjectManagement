@@ -492,7 +492,8 @@ public class MainModelTest {
 		}
 	}
 		
-		
+
+
 /*	@Test
 	public void testDeleteActivityfromDb() {
 		fail("Not yet implemented");
@@ -562,6 +563,104 @@ public class MainModelTest {
 	public void testGetProjectActivitiesNames() {
 		fail("Not yet implemented");
 	}*/
+
+	//This method also tests getMemberActivities(), getMemberProjects() and getActivityMembers()
+		@Test
+		public void testAddMemberToActivity() {
+			try {
+				MainModel mainModel = MainModel.getInstance();
+
+				//Adding a member to the database
+				mainModel.addMemberToDatabase("AAAA", "testMemberA", 0);
+				mainModel.addMemberToDatabase("BBBB", "testMemberB", 0);
+
+				//Adding a project to the database.
+				int pmID = 1;
+				String name = "TestProject1";
+				String description = "";
+				double budget = 1000;
+				String startDate = "Mon Jul 20 00:00:00 EDT 2015";
+				String finishDate = "Wed Jul 20 00:00:00 EDT 2016";
+				Status status = Status.LOCKED;
+
+				mainModel.addProjectToDb(pmID, name, description, budget, startDate, finishDate, status);
+
+				//Associating a new activity with TestProject1
+				int parentID = mainModel.getLastProject().getID();
+				String activityName = "TestA";
+				String activitydescription = "";
+				double activitybudget = 100;
+				String activityStartDate = "Mon Jul 21 00:00:00 EDT 2015";
+				String activityFinishDate = "Wed Jul 20 00:00:00 EDT 2016";
+				Status activityStatus = Status.LOCKED;
+
+				mainModel.addActivityToDb(parentID, activityName, activitydescription, activitybudget,
+						activityStartDate, activityFinishDate, activityStatus);
+
+				//Assigning members to the activity
+				int memberA_ID = mainModel.getLastMember().getUserID() - 1;
+				int memberB_ID = mainModel.getLastMember().getUserID();
+				int activityID = mainModel.getLastActivity().getID();
+
+				mainModel.addMemberToActivity(memberA_ID, activityID);
+				mainModel.addMemberToActivity(memberB_ID, activityID);
+
+				ArrayList<Member> activityMembers = mainModel.getActivityMembers(activityID);
+
+				assertEquals("1st Member should be AAAA", "AAAA",
+						activityMembers.get(0).getUsername());
+				assertEquals("2nd Member should be BBBB", "BBBB",
+						activityMembers.get(1).getUsername());
+
+				//Testing getMemberActivities() and getMemberProjects()
+				assertEquals("MemberActivities should be equal 1", 1, mainModel.getMemberActivities(memberA_ID).size());
+				assertEquals("MemberProjects should be equal 1", 1, mainModel.getMemberProjects(memberA_ID).size());
+
+				mainModel.removeMemberFromActivity(memberB_ID, activityID);
+
+				assertEquals("Remaing number of members assigned should be 1", 1,
+						mainModel.getActivityByID(activityID).getActivityTeam().size());
+				System.out.println("got here!");
+
+			} catch (Exception e) {
+				
+			}
+		}
+
+		@Test
+		public void testRemoveMemberToActivity() {
+			try {
+				MainModel mainModel = MainModel.getInstance();
+
+				Activity activity = mainModel.getLastActivity();
+				int activityID = activity.getID();
+
+				//Adding a member to the database and associating with activity
+				mainModel.addMemberToDatabase("testerA", "a", 0);
+				mainModel.addMemberToDatabase("testerB", "b", 0);
+
+				//Assigning members to the activity
+				int testerA_ID = mainModel.getLastMember().getUserID() - 1;
+				int testerB_ID = mainModel.getLastMember().getUserID();
+
+				mainModel.addMemberToActivity(testerA_ID, activityID);
+				mainModel.addMemberToActivity(testerB_ID, activityID);
+
+				//Total number of members assigned to activity
+				int numberOfMembers = mainModel.getActivityByID(activityID).getActivityTeam().size();
+
+				mainModel.removeMemberFromActivity(testerB_ID, activityID);
+
+				//remaining number of members after removing testerB
+				int remainingMembers = mainModel.getActivityByID(activityID).getActivityTeam().size();
+
+				assertEquals(numberOfMembers - 1, remainingMembers);
+
+			} catch (Exception e) {
+				
+			}
+
+		}
 
 
 }
