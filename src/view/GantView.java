@@ -21,11 +21,11 @@ import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
 
-public class GanttView extends JFrame {
+public class GantView extends JFrame {
 
 	private Project gantProj;
 	
-    public GanttView(String title,  Project proj) {
+    public GantView(String title,  Project proj) {
 
         super(title);
         setGantProj(proj);
@@ -96,7 +96,7 @@ public class GanttView extends JFrame {
      */
     private JFreeChart createChart(final IntervalCategoryDataset dataset) {
         final JFreeChart chart = ChartFactory.createGanttChart(
-            getGantProj().getName() +" 	Gantt Chart ",  	// chart title
+            getGantProj().getName() +" 	Gant Chart ",  	// chart title
             "ACTIVITY",              					// domain axis label
             "DATE",              						// range axis label
             dataset,             						// data

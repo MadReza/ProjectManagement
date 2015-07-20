@@ -1,6 +1,9 @@
 package model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class Activity extends Job{
 
@@ -8,6 +11,8 @@ public class Activity extends Job{
 	private ArrayList <Activity> preReq;			// list of prerequisite activities
 	private ArrayList <Activity> successors;		// list of Activities that depend on this Activity
 	private ArrayList <Member> activityTeam;		// members who are assigned to this activity        			Iteration 2
+	// date formatter
+	SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.CANADA);
 	
 	public Activity (int parentProjectID, String name, String description, double budget, String startDate, String finishDate, Status status) throws Exception {
 		super(name, description, budget, startDate, finishDate, status);
@@ -58,6 +63,14 @@ public class Activity extends Job{
 		this.successors = successors;
 	}
 
+	public void addSuccessor(Activity newActivity){
+		successors.add(newActivity);
+	}
+	
+	public void removeSuccessor(Activity deletedActivity){
+		successors.remove(deletedActivity);
+	}
+	
 	public int getParentProjectID() {
 		return parentProjectID;
 	}
@@ -66,6 +79,35 @@ public class Activity extends Job{
 		this.parentProjectID = parentProjectID;
 	}
 
+	public boolean activityDatesSuitsPrereqs(){
+		if(!preReq.isEmpty()){
+			for(Activity prereqAct: preReq){
+				try {
+					if ( sdf.parse(this.getStartDate()).before(sdf.parse(prereqAct.getFinishDate()))) {
+						return false;
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return true;
+	}
+	
+	public boolean activityDatesSuitsSuccessors(){
+		if(!preReq.isEmpty()){
+			for(Activity sucAct: successors){
+				try {
+					if ( sdf.parse(this.getStartDate()).before(sdf.parse(sucAct.getFinishDate()))) {
+						return false;
+					}
+				} catch (ParseException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		return true;
+	}
 	@Override
 	// to compare activities by ID
 	public boolean equals(Object other){

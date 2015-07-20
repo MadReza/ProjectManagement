@@ -29,7 +29,7 @@ import org.jfree.ui.RefineryUtilities;
 
 import view.ActivityPanel;
 import view.EditableList;
-import view.GanttView;
+import view.GantView;
 import view.MainView;
 import view.MemberListView;
 import view.ProjectPanel;
@@ -38,33 +38,22 @@ import view.ProjectPanel;
 public class MainController {
 	
 	private MainModel mainModel;
-	
 	private MainView mainView;
-    	
 	private Member currentMember;
 	
 	private ArrayList<Project> allMemberProjects; 
-	
 	private ArrayList<Activity> allMemberActivities;
-	
 	private EditableList<Activity> prereqEditable;
-	
 	private EditableList<Member> memberEditable;
-	
 	private MemberListView<Member> activityTeam;
-
 	// the Project selected in the ExistingProjectsCombo box if any
 	private Project selectedProject; 
-	
 	// the Activity selected in the ProjectActivitiesCombo box if any
 	private Activity selectedActivity;
-	
 	// reference to the ExistingProjects combo box in the main tool bar 
 	private JComboBox<Project> projCombo ;
-	
 	// reference to the combo box displaying activities of each project in projectActivities combo box in the Project panel
 	private JComboBox<Activity> actCombo ;
-	
 	private ProjectPanel projPanel;
 	private ActivityPanel actPanel;
 	
@@ -76,29 +65,24 @@ public class MainController {
 
 		allMemberProjects = new ArrayList<Project>();
 		allMemberActivities = new ArrayList<Activity>();
-		
 		// to eliminate long expressions redundancy
 		projPanel = (ProjectPanel) mainView.getProjectPanel();
 		actPanel = (ActivityPanel) mainView.getActivityPanel();
 		projCombo = mainView.getExistingProjectsCombo();
 		actCombo = projPanel.getProjectActivitiesCombo();
-		
 		// registers all listeners to the view
 		registerListeners();
 	}
 	
 	///////////////////////////////////////////////////////////////////	Listeners	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-	
 	//////////////////////// Private Classes for Listeners
 	
 	// inner class to implement loginListener
 	private class LoginListener implements ActionListener{
-		
 		@Override
 		public void actionPerformed(ActionEvent ev) {
 			String user = mainView.getLoginPage().getUsername();
 			String pass = mainView.getLoginPage().getPassword();
-			
 			try {
 				Member member = mainModel.validateLogin(user, pass);
 				if(member == null){				// not a member nor a manager
@@ -116,29 +100,23 @@ public class MainController {
 						}
 				}
 			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
-
 		}
 	}
 	
 	// inner class to implement registerBtnListener
 	private class RegisterBtnListener implements ActionListener {
-
 		public void actionPerformed(ActionEvent arg0) {
 			mainView.getLoginPage().setVisible(false);
 			mainView.getLoginPage().getSignupFrame().setVisible(true);
 		}
-	
 	}
 
 	// inner class to implement sign up a new member or project manager
 	private class SignupListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent event) {
-			
 			String user = mainView.getLoginPage().getSignupFrame().getSignupUN();
 			int role = mainView.getLoginPage().getSignupFrame().getRole();
 			String pass = mainView.getLoginPage().getSignupFrame().getSignupPW();
@@ -149,9 +127,7 @@ public class MainController {
 			else if (!pass.equals(confirm)) 
 				JOptionPane.showMessageDialog(null, "Passwords do not match");	
 			else {
-
 				try {
-
 					mainModel.addMemberToDatabase(user, pass, role);
 					mainView.getLoginPage().getSignupFrame().dispose();
 					if(role == 0){
@@ -159,7 +135,6 @@ public class MainController {
 					}
 					mainView.setVisible(true);
 					//mainView.getLoginPage().setVisible(true);
-
 				} catch (SQLException e) {
 					if(e.getMessage().contains("UNIQUE")) {
 						JOptionPane.showMessageDialog(null, "This username is already taken!");	
@@ -168,6 +143,12 @@ public class MainController {
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Error : Member Account was not created! try again.");
 					mainView.getLoginPage().getSignupFrame().clearSignupForm();
+				}
+				try {
+					currentMember = mainModel.getLastMember();
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
 		} 				
@@ -178,9 +159,9 @@ public class MainController {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				mainView.getLoginPage().getSignupFrame().dispose();
-				mainView.getLoginPage().setVisible(true);
-			}		
+			mainView.getLoginPage().getSignupFrame().dispose();
+			mainView.getLoginPage().setVisible(true);
+		}		
 	}
 	
 	// inner class to implement Save/Edit/Modify Project
@@ -189,46 +170,39 @@ public class MainController {
 		public void actionPerformed(ActionEvent ev) {
 			
 			boolean formReady = isFormReady(1);
-			
 			if(formReady){
 				// get Project data from Project Panel Form
 				JButton saveBtn = (JButton) ev.getSource();
 				try {
 					Project updatedProject = getProjectValues();
-					
 					// new project
 					if(saveBtn.getText().equalsIgnoreCase("Save")){
-						
 						if(projPanel.startInPast()){
-							JOptionPane.showMessageDialog(null, "Start in the past !!!!");
-						}
-													
-						else{
+							int reply = JOptionPane.showConfirmDialog(null, "Start in the past !!!!", "Choose one", JOptionPane.YES_NO_OPTION);
+							if(reply == JOptionPane.NO_OPTION)	{	return; }
+						} else {
 							addProjectEvent(updatedProject);
 						}
 					}
 					
 					else if(saveBtn.getText().equalsIgnoreCase("Edit")){
-						
 						projPanel.enableFieldsEdit(true);
 						saveBtn.setText("Update");
 						projPanel.getDeleteBtn().setText("Cancel");
-						mainView.getJobsTabbedPane().setEnabledAt(2, false);
+						actPanel.setEnabled(false);
 					}
 					
 					else if(saveBtn.getText().equalsIgnoreCase("Update")){
-						
-							mainModel.updateProject(selectedProject, updatedProject);
-							JOptionPane.showMessageDialog(null, "Project updated sucessfully");
-							saveBtn.setText("Edit");
-							projPanel.getDeleteBtn().setText("Delete");
-							actCombo.setEnabled(true);
-							linkAll();
-							Project sProject = selectedProject;
-							refreshAll();
-							projCombo.setSelectedItem(sProject);
+						mainModel.updateProject(selectedProject, updatedProject);
+						JOptionPane.showMessageDialog(null, "Project updated sucessfully");
+						saveBtn.setText("Edit");
+						projPanel.getDeleteBtn().setText("Delete");
+						actCombo.setEnabled(true);
+						linkAll();
+						Project sProject = selectedProject;
+						refreshAll();
+						projCombo.setSelectedItem(sProject);
 					}
-					
 				} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -241,36 +215,30 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent ev) {
 			
-		boolean formReady = isFormReady(2);
-		
-		if(formReady){
-			JButton saveBtn = (JButton) ev.getSource();
-			Activity updatedActivity = getActivityValues();
-
-			try {
+			boolean formReady = isFormReady(2);
+			if(formReady){
+				JButton saveBtn = (JButton) ev.getSource();
+				Activity updatedActivity = getActivityValues();
+				try {
 					if(saveBtn.getText().equalsIgnoreCase("Save")){
 						
-						int suitsParent = mainModel.activityDatesSuitsParent(updatedActivity, selectedProject);
-						
 						if( actPanel.startInPast()){
-							JOptionPane.showMessageDialog(null, "Start in the past !!!!");
+							int reply = JOptionPane.showConfirmDialog(null, "Warning: Start in the past !!!!", "Choose one", JOptionPane.YES_NO_OPTION);
+							if(reply == JOptionPane.NO_OPTION)	{	return;}
+						}
+						if( ! mainModel.activityBudgetSuitsParent(updatedActivity, selectedProject)){
+							int reply = JOptionPane.showConfirmDialog(null, "Warning: The Sum of a Project Activities budgets will exceed their parent project ", "Choose one", JOptionPane.YES_NO_OPTION);
+							if(reply == JOptionPane.NO_OPTION){	return; }
 						}
 						
-						else if( ! mainModel.activityBudgetSuitsParent(updatedActivity, selectedProject)){
-							JOptionPane.showMessageDialog(null, "Adjust: The Sum of a Project Activities budgets can't exceed their parent project ");
-						}
-						
-						else if(suitsParent == 1) {
+						int suitsParent = mainModel.activityDatesSuitsParent(updatedActivity, selectedProject);
+						if(suitsParent == 1) {
 							JOptionPane.showMessageDialog(null, "Adjust: the Activity start date can't precede its parent project start date");
 						}
-						
 						else if(suitsParent == 2) {
 							JOptionPane.showMessageDialog(null, "Adjust: the Activity Finish date can't follow its parent project Finish date");
 						}
-						
-						
 						else{
-							
 							if(selectedProject.getStatus().equals(Status.LOCKED) && !actPanel.getStatus().equals(Status.LOCKED) ){
 								actPanel.setStatus(Status.LOCKED);
 								updatedActivity.setStatus(Status.LOCKED);
@@ -279,44 +247,43 @@ public class MainController {
 							addActivityEvent(updatedActivity);
 						}
 					}
-				
+					
 					else if(saveBtn.getText().equalsIgnoreCase("Edit")){
-						
 						actPanel.enableFieldsEdit(true);
 						actPanel.getSaveBtn().setText("Update");
 						actPanel.getDeleteBtn().setText("Cancel");
 					}
-				
+					
 					else if(saveBtn.getText().equalsIgnoreCase("Update")){
 						
-						int suitsParent = mainModel.activityDatesSuitsParent(updatedActivity, selectedProject);
-						
 						if( ! mainModel.activityBudgetSuitsParent(updatedActivity, selectedProject)){
-							JOptionPane.showMessageDialog(null, "Adjust: The Sum of a Project Activities budgets can't exceed their parent project ");
+							int reply = JOptionPane.showConfirmDialog(null, "Warning: The Sum of a Project Activities budgets will exceed their parent project ", "Choose one", JOptionPane.YES_NO_OPTION);
+							if(reply == JOptionPane.NO_OPTION) {	return; }
 						}
 						
-						else if(suitsParent == 1) {
+						int suitsParent = mainModel.activityDatesSuitsParent(updatedActivity, selectedProject);
+						if(suitsParent == 1) {
 							JOptionPane.showMessageDialog(null, "Adjust: the Activity start date can't precede its parent project start date");
 						}
-						
 						else if(suitsParent == 2) {
 							JOptionPane.showMessageDialog(null, "Adjust: the Activity Finish date can't follow its parent project Finish date");
 						}
-						
 						else if( ! mainModel.activityDatesSuitsAllPrereqs(selectedActivity, updatedActivity) ){
 							JOptionPane.showMessageDialog(null, "Adjust: the Activity doesn't suit its prerequisites");
 						}
-						
+						else if ( ! mainModel.activityDatesSuitsAllSuccessors(selectedActivity, updatedActivity) ) {
+							JOptionPane.showMessageDialog(null, "Adjust: the Activity doesn't suit its successors");
+						}
 						else if( ! mainModel.activityDatesSuitsAllSuccessors(selectedActivity, updatedActivity) ){
 							JOptionPane.showMessageDialog(null, "Adjust: the Activity doesn't suit its successors");
 						}
-						
 						else{
-							
-							if(selectedProject.getStatus().equals(Status.LOCKED) && ! actPanel.getStatus().equals(Status.LOCKED) ){
-								actPanel.setStatus(Status.LOCKED);
-								updatedActivity.setStatus(Status.LOCKED);
-								JOptionPane.showMessageDialog(null, "Activity Status was set to Locked like its parent");
+							if(selectedProject.getStatus().equals(Status.LOCKED) ){
+								if(! actPanel.getStatus().equals(Status.LOCKED)){
+									JOptionPane.showMessageDialog(null, "Activity Status was set to Locked like its parent");
+									actPanel.setStatus(Status.LOCKED);
+									updatedActivity.setStatus(Status.LOCKED);
+								}
 							}
 							updatedActivity.setPreReq(selectedActivity.getPreReq());
 							mainModel.updateActivity(selectedActivity, updatedActivity);
@@ -340,11 +307,9 @@ public class MainController {
 							actCombo.setSelectedItem(sAct);
 						}
 					}		
-				
-			} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} catch (Exception e) {
+						e.printStackTrace();
+					}
 			}
 		}
 	}
@@ -353,20 +318,15 @@ public class MainController {
 	private class DeleteProjectListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent ev) {
-			// TODO Auto-generated method stub
-
 			try {
 				JButton delBtn = (JButton) ev.getSource();
 				if(delBtn.getText().equalsIgnoreCase("Delete")){
-					
 					Project deletedProject = (Project)projCombo.getSelectedItem();
 					removeProjectEvent(deletedProject);
 					setInitialPosition();
 				}
-				
 				else if(delBtn.getText().equalsIgnoreCase("Cancel")) {
 					if(projCombo.getSelectedIndex() < 0) {				// in case of cancel creating a new project
-
 						setInitialPosition();
 						return;
 					}
@@ -384,9 +344,7 @@ public class MainController {
 						mainView.getTablePanel().getTable().setEnabled(true);
 					}
 				}
-				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -398,7 +356,6 @@ public class MainController {
 		public void actionPerformed(ActionEvent ev) {
 			
 			JButton delBtn = (JButton) ev.getSource();
-			
 			try {
 				if(delBtn.getText().equalsIgnoreCase("Delete")){
 					Activity deletedActivity = selectedActivity;
@@ -410,6 +367,7 @@ public class MainController {
 						actPanel.clearForm();
 						mainView.getJobsTabbedPane().setSelectedIndex(1);
 						mainView.getJobsTabbedPane().setEnabledAt(2,false);
+						disableSelecion(true);
 					}
 					else {																// case of cancel editing an existing Activity
 						mainView.getJobsTabbedPane().setEnabledAt(2,true);
@@ -439,22 +397,20 @@ public class MainController {
 		public void itemStateChanged(ItemEvent ev) {
 		    
 		    selectedProject = (Project) ev.getItem();
-
 		    if (ev.getStateChange() == ItemEvent.SELECTED) {
 				mainView.getJobsTabbedPane().setSelectedIndex(1);
 				mainView.getJobsTabbedPane().setEnabledAt(1, true);
 				mainView.getJobsTabbedPane().setEnabledAt(2, false);
 				fillProjectForm(selectedProject);
 				
-				@SuppressWarnings("unchecked")
 				int index = ((JComboBox<Project>) ev.getSource()).getSelectedIndex();
 				mainView.getTablePanel().getTable().setRowSelectionInterval(index-1, index-1);
 				DefaultMutableTreeNode pNode = mainView.getTreePanel().searchNode(selectedProject);
 				if(pNode != null){
 					TreePath path = new TreePath(pNode.getPath());
 					mainView.getTreePanel().getTree().getSelectionModel().addSelectionPath(path);
+					mainView.getTreePanel().getTree().expandPath(path);
 				}
-
 		    } else if (ev.getStateChange() == ItemEvent.DESELECTED) {
 		    	mainView.getJobsTabbedPane().setEnabledAt(1, false);
 		    	mainView.getJobsTabbedPane().setEnabledAt(2, false);
@@ -462,6 +418,7 @@ public class MainController {
 				if(projCombo.getSelectedIndex() == -1){
 					selectedProject = null;
 					mainView.getTreePanel().getTree().setSelectionRow(0);
+//					mainView.getTreePanel().getTree().collapseRow(0);
 				}
 		    }
 		}
@@ -473,7 +430,6 @@ public class MainController {
 		public void itemStateChanged(ItemEvent ev) {
 			
 		    selectedActivity = (Activity) ev.getItem();	 
-
 		    if (ev.getStateChange() == ItemEvent.SELECTED) {
 		    	
 		    	fillActivityForm(selectedActivity);
@@ -485,7 +441,6 @@ public class MainController {
 					TreePath path = new TreePath(aNode.getPath());
 					mainView.getTreePanel().getTree().getSelectionModel().addSelectionPath(path);
 				} 
-				
 		    } else if (ev.getStateChange() == ItemEvent.DESELECTED) {
 		      // Item is no longer selected
 		    	mainView.getJobsTabbedPane().setEnabledAt(2, false);
@@ -507,7 +462,6 @@ public class MainController {
 	private class SelectionListener implements TreeSelectionListener {
 		@Override
 		public void valueChanged(TreeSelectionEvent e) {
-			
 			DefaultMutableTreeNode node =  (DefaultMutableTreeNode) mainView.getTreePanel().getTree().getLastSelectedPathComponent();
 		    if (node == null || node.isRoot()){
 		    	mainView.getTablePanel().getTable().clearSelection();
@@ -544,7 +498,6 @@ public class MainController {
 	private class PrereqListener implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
 			if(currentMember.isManager()){
 				if(prereqEditable != null){			// prevents opening same window several times
 					prereqEditable.dispose();
@@ -563,12 +516,10 @@ public class MainController {
 									availableList.add(activity);
 							}
 						}
-						
 					} else {		// not used unless we can add a prerequisite activity while creating a new activity ... not recommended 
 						prereqList = new ArrayList<Activity>();
 						availableList = allActivities;
 					}
-					
 					prereqEditable = new EditableList<Activity>("*** " + selectedActivity + " *** prerequisites", availableList, prereqList);
 					
 				} catch (Exception e1) {
@@ -586,21 +537,28 @@ public class MainController {
 		public void actionPerformed(ActionEvent e) {
 			if(currentMember.isManager()){
 				Activity elt = prereqEditable.getAvailableList().getSelectedValue();
-				
-				if(!prereqEditable.getAssignedListModel().contains(elt)){
-					
-					if(activitySuitsPrereq(selectedActivity, elt)){
-						prereqEditable.getAssignedListModel().addElement(elt);
-						selectedActivity.addpreReq(elt);
-						try {
-							mainModel.addActivityPrereq(elt.getID() , selectedActivity.getID() );
-						} catch (Exception e1) {
-							e1.printStackTrace();
+				if(elt != null){
+					if(!prereqEditable.getAssignedListModel().contains(elt)){
+						
+						if(activitySuitsPrereq(selectedActivity, elt)){
+							adjustActivityStatus(selectedActivity, elt);
+							prereqEditable.getAssignedListModel().addElement(elt);
+							selectedActivity.addpreReq(elt);
+							elt.addSuccessor(selectedActivity);
+							try {
+								mainModel.addActivityPrereq(elt.getID() , selectedActivity.getID() );
+								mainModel.updateActivity(selectedActivity, selectedActivity);
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
+							prereqEditable.getAvailableListModel().removeElement(elt);
 						}
-						prereqEditable.getAvailableListModel().removeElement(elt);
 					}
-				}
+				} 
 			}
+			prereqEditable.getAvailableList().clearSelection();
+			prereqEditable.getAddButton().setEnabled(false);
+			prereqEditable.getRemoveButton().setEnabled(false);
 		}
 	}
 	
@@ -608,18 +566,25 @@ public class MainController {
 	private class editableRemovePrereqListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Activity elt = prereqEditable.getAssignedList().getSelectedValue();
-			
-			prereqEditable.getAssignedListModel().removeElement(elt);
-			selectedActivity.removepreReq(elt);
-			try {
-				mainModel.removeActivityPrereq(elt.getID() , selectedActivity.getID() );
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			if(currentMember.isManager()){
+				Activity elt = prereqEditable.getAssignedList().getSelectedValue();
+				if(elt != null){
+					prereqEditable.getAssignedListModel().removeElement(elt);
+					selectedActivity.removepreReq(elt);
+					try {
+						mainModel.removeActivityPrereq(elt.getID() , selectedActivity.getID() );
+						prereqEditable.getRemoveButton().setEnabled(false);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					if(!prereqEditable.getAvailableListModel().contains(elt)){
+						prereqEditable.getAvailableListModel().addElement(elt);
+					}
+				}
 			}
-			if(!prereqEditable.getAvailableListModel().contains(elt)){
-				prereqEditable.getAvailableListModel().addElement(elt);
-			}
+			prereqEditable.getAssignedList().clearSelection();
+			prereqEditable.getAddButton().setEnabled(false);
+			prereqEditable.getRemoveButton().setEnabled(false);
 		}
 	}
 	
@@ -627,14 +592,12 @@ public class MainController {
 	private class MemberListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
 			if(currentMember.isManager()){
 				if(memberEditable != null){			// prevents opening same window several times
 					memberEditable.dispose();
 				}
 				try {
 					ArrayList<Member> allMembers = mainModel.getAllTeamMembers();
-
 					ArrayList<Member> membersList;
 					ArrayList<Member> availableList = new ArrayList<Member>();
 					
@@ -646,7 +609,6 @@ public class MainController {
 									availableList.add(member);
 							}
 						}
-						
 					} else {			// not actually used unless we can add a Member to an activity while creating a new activity ... not recommended 
 						membersList = new ArrayList<Member>();
 						availableList = allMembers;
@@ -672,7 +634,6 @@ public class MainController {
 									availableList.add(member);
 							}
 						}
-						
 					} else {			// not actually used unless we can add a Member to an activity while creating a new activity ... not recommended 
 						membersList = new ArrayList<Member>();
 						availableList = allMembers;
@@ -690,17 +651,20 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Member elt = memberEditable.getAvailableList().getSelectedValue();
-			
-			if(!memberEditable.getAssignedListModel().contains(elt)){
-				
-				memberEditable.getAssignedListModel().addElement(elt);
-				selectedActivity.addMemberToTeam(elt);
-				try {
-					mainModel.addMemberToActivity(elt.getUserID() , selectedActivity.getID() );
-				} catch (Exception e1) {
-					e1.printStackTrace();
+			if(elt != null){
+				if(!memberEditable.getAssignedListModel().contains(elt)){
+					memberEditable.getAssignedListModel().addElement(elt);
+					selectedActivity.addMemberToTeam(elt);
+					try {
+						mainModel.addMemberToActivity(elt.getUserID() , selectedActivity.getID() );
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					memberEditable.getAvailableListModel().removeElement(elt);
 				}
-				memberEditable.getAvailableListModel().removeElement(elt);
+				memberEditable.getAvailableList().clearSelection();
+				memberEditable.getAddButton().setEnabled(false);
+				memberEditable.getRemoveButton().setEnabled(false);
 			}
 		}
 	}
@@ -710,32 +674,34 @@ public class MainController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Member elt = memberEditable.getAssignedList().getSelectedValue();
-			
-			memberEditable.getAssignedListModel().removeElement(elt);
-			selectedActivity.removeMemberFromTeam(elt);
-			try {
-				mainModel.removeMemberFromActivity(elt.getUserID() , selectedActivity.getID() );
-			} catch (Exception e1) {
-				e1.printStackTrace();
+			if(elt != null){	
+				memberEditable.getAssignedListModel().removeElement(elt);
+				selectedActivity.removeMemberFromTeam(elt);
+				try {
+					mainModel.removeMemberFromActivity(elt.getUserID() , selectedActivity.getID() );
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				if(!memberEditable.getAvailableListModel().contains(elt)){
+					memberEditable.getAvailableListModel().addElement(elt);
+				}
+				memberEditable.getAssignedList().clearSelection();
+				memberEditable.getAddButton().setEnabled(false);
+				memberEditable.getRemoveButton().setEnabled(false);
 			}
-			if(!memberEditable.getAvailableListModel().contains(elt)){
-				memberEditable.getAvailableListModel().addElement(elt);
-			}
-		}
+		}	
 	}
 
 	// implements creating a new activity in the project form
 	private class NewActivityBtnListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent ev) {
-			
+			disableSelecion(false);
 			JButton newActBtn = (JButton) ev.getSource();
 			newActBtn.setEnabled(false);
-			
 			refreshActivitiesCombo(selectedProject.getID());
 			projPanel.getSaveBtn().setEnabled(false);
 			projPanel.getDeleteBtn().setEnabled(false);
-			
 			actPanel.getSaveBtn().setText("Save");
 			actPanel.getDeleteBtn().setText("Cancel");
 			actPanel.enableFieldsEdit(true);
@@ -744,7 +710,6 @@ public class MainController {
 			actPanel.getPrereqBtn().setEnabled(false);
 			actPanel.getMemberBtn().setEnabled(false);
 			actPanel.clearForm();
-			
 			mainView.getJobsTabbedPane().setEnabledAt(2, true);
 			mainView.getJobsTabbedPane().setSelectedIndex(2);	
 		}
@@ -754,20 +719,16 @@ public class MainController {
 	private class NewProjectItemListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-				
 			refreshAll();
-			
 			mainView.getNewProjectItem().setEnabled(false);
 			projCombo.setEnabled(false);
 			mainView.getTreePanel().getTree().setEnabled(false);
 			mainView.getTablePanel().getTable().setEnabled(false);
-						
 			mainView.getJobsTabbedPane().setEnabledAt(1, true);
 			mainView.getJobsTabbedPane().setSelectedIndex(1);
 			mainView.getJobsTabbedPane().setEnabledAt(2, false);
 			projPanel.enableFieldsEdit(true);
 			actPanel.enableFieldsEdit(false);
-			
 			projPanel.clearForm();
 			projPanel.getDeleteBtn().setText("Cancel");
 			projPanel.getDeleteBtn().setEnabled(true);
@@ -781,7 +742,6 @@ public class MainController {
 	private class ExitItemListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			JOptionPane.showMessageDialog(null, "Confirm Exit");
 			System.exit(0);
 		}
@@ -791,13 +751,10 @@ public class MainController {
 	private class tableRowSelectionListener implements ListSelectionListener {
 		@Override
 		public void valueChanged(ListSelectionEvent ev) {
-
 	        int[] selectedRow = mainView.getTablePanel().getTable().getSelectedRows();
-
         	if(selectedRow.length > 0){
         		projCombo.setSelectedIndex(selectedRow[0]+1);
-        	}
-        	else {
+        	} else {
         		projCombo.setSelectedIndex(-1);
         	}
 		}	
@@ -805,11 +762,8 @@ public class MainController {
 	
 	// implements gantt chart
 	private class GantItemListener implements ActionListener {
-
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			// TODO Auto-generated method stub
-			
 			try {
 				if (selectedProject == null)
 				{
@@ -817,30 +771,23 @@ public class MainController {
 					return;
 				}
 				
-				
 				ArrayList<Activity> projectActs = mainModel.getProjectActivities(selectedProject.getID());
 				selectedProject.setProjectActivities(projectActs);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-			final GanttView gantView = new GanttView( selectedProject.getName() +  "'s Gantt Chart", selectedProject);
-			
+			final GantView gantView = new GantView( selectedProject.getName() +  "'s Gantt Chart", selectedProject);
 			gantView.pack();
-	        
 	        RefineryUtilities.centerFrameOnScreen(gantView);
 	        gantView.setVisible(true);
 	        gantView.createDataset();
 		}
-		
 	}
 	
 	/////////////////////////////////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	// checks if the project / activity form fields are suitable for creating project / activity
 	public boolean isFormReady(int classType){
-		
 		int isReady = -1;
 		// classType = 1   for a Project form
 		if(classType == 1){
@@ -869,15 +816,12 @@ public class MainController {
 	
 	// loads a project fields from the database and displays it in the project form
 	public void fillProjectForm(Project sProject){
-	
 		projPanel.enableFieldsEdit(false);
 		ProjectPanel form = (ProjectPanel) projPanel;
-		
 		mainView.ProjectPaneEnabled(true);
 		mainView.getJobsTabbedPane().setSelectedIndex(1);
 		projPanel.getDeleteBtn().setEnabled(true);
 		projPanel.getSaveBtn().setText("Edit");
-		
 		form.setNameFld(sProject.getName());
 		form.setDescriptionArea(sProject.getDescription());
 		form.setBudgetFld(sProject.getBudget());
@@ -889,15 +833,12 @@ public class MainController {
 	
 	// loads an activity fields from the database and displays it in the activity form	
 	public void fillActivityForm(Activity sActivity){
-		
 		actPanel.enableFieldsEdit(false);
 		ActivityPanel form = (ActivityPanel) actPanel;
-		
 		mainView.ActivityPaneEnabled(true);
 		mainView.getJobsTabbedPane().setSelectedIndex(2);
 		actPanel.getDeleteBtn().setEnabled(true);
 		actPanel.getSaveBtn().setText("Edit");
-		
 		form.setNameFld(sActivity.getName());
 		form.setDescriptionArea(sActivity.getDescription());
 		form.setBudgetFld(sActivity.getBudget());
@@ -930,7 +871,6 @@ public class MainController {
 	
 	// loads the activities of a project (for a member only those activities whom he is assigned to are loaded)
 	public void linkActivitiesToProjets() {
-		
 		if (currentMember.isManager()){ 
 			for(Project proj: allMemberProjects){
 				try {
@@ -950,7 +890,6 @@ public class MainController {
 						}
 					}
 					proj.setProjectActivities(memberActsOfProject);
-					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -959,20 +898,17 @@ public class MainController {
 	}
 	
 	public void linkPrereqsToActivities() {
-		
 		for(Activity act: allMemberActivities){
 			try {
+				if(act != null){
 				act.setPreReq(mainModel.getActivityPreReq(act.getID()));
+				}
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public void linkMemberstoActivites() {
-		
-	}
-
 	// invokes the methods:	 setProjectsToMember, inkActivitiesToProjets , linkPrereqsToActivities , linkMemberstoActivites
 	public void linkAll() {
 		try {
@@ -987,7 +923,6 @@ public class MainController {
 
 	// enables initial default features for a manager
 	public void setInitialPosition(){
-		
 		mainView.getTreePanel().getTree().setEnabled(true);
 		mainView.getTablePanel().getTable().setEnabled(true);
 		projCombo.setEnabled(true);
@@ -1010,18 +945,20 @@ public class MainController {
 	
 	// loads updated member/manager projects into the existingProjects combo box in the main tool bar
 	public void refreshProjectsCombo(){
-		
 		projCombo.removeAllItems();
 		projCombo.insertItemAt(null, 0);
 		ArrayList <Project> mProjects = new ArrayList <Project>();
+
 		try {
-			if (currentMember.isManager()){
-				mProjects = mainModel.getManagerProjects(currentMember.getUserID()) ;
-			} else {
-				mProjects = mainModel.getMemberProjects(currentMember.getUserID()) ;
-			}
-			for(Project proj: mProjects){
-				projCombo.addItem(proj);
+			if(mProjects != null){
+				if (currentMember.isManager()){
+					mProjects = mainModel.getManagerProjects(currentMember.getUserID()) ;
+				} else {
+					mProjects = mainModel.getMemberProjects(currentMember.getUserID()) ;
+				}
+				for(Project proj: mProjects){
+					projCombo.addItem(proj);
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1053,7 +990,6 @@ public class MainController {
 	public void refreshActivitiesCombo(int pID){
 		actCombo.removeAllItems();
 		actCombo.insertItemAt(null, 0);
-
 		try {
 			ArrayList<Activity> pActivities = new ArrayList<Activity>() ;
 			for(Project proj: allMemberProjects){
@@ -1061,10 +997,8 @@ public class MainController {
 					pActivities = proj.getProjectActivities();
 				}
 			}
-			
 			if(!pActivities.isEmpty()){
 				for(Activity act: pActivities) {
-	
 					actCombo.addItem(act);
 				}
 			}		
@@ -1075,7 +1009,6 @@ public class MainController {
 	
 	// give a report of the projects managed by a manager or activities assigned to a team member  /////////////// Iteration 2	
 	public void refreshReport(){
-		
 		 mainView.getReportPanel().setReport("");
 		 mainView.getReportPanel().setUserName(currentMember.getUsername());
 		 mainView.getReportPanel().getUserNameFld().setEditable(false);
@@ -1117,7 +1050,6 @@ public class MainController {
 	public void setMemberActivities() {
 		// if manager
 		if (currentMember.isManager()){
-
 			for(Project proj: allMemberProjects){
 				try {
 					allMemberActivities.clear();
@@ -1126,8 +1058,7 @@ public class MainController {
 					e.printStackTrace();
 				}
 			}
-		}
-		else {
+		} else {
 			try {
 				allMemberActivities = mainModel.getMemberActivities(currentMember.getUserID());
 			} catch (Exception e) {
@@ -1138,29 +1069,39 @@ public class MainController {
 	
 	// used in prereqListener to check if a prerequisite activity suits a specific activity before adding it as a prerequisite
 	public boolean activitySuitsPrereq(Activity originalActivity, Activity prereqActivity){
-		
 		// "Start date can't precede its prerequisite Finish date"
 		if( ! mainModel.activityDatesSuitsPrereq(originalActivity , prereqActivity)) {	
 			JOptionPane.showMessageDialog(null, "Activity start date can't precede its prerequisite Finish date");
 			return false;
 		}
-		// check status
-		else {
-			if( ! prereqActivity.getStatus().equals(Status.FINISHED)){
+		return true;
+	}
+	
+	// Adjust Activity status to suit its prerequisites
+	private void adjustActivityStatus(Activity originalActivity, Activity prereqActivity){
+		if ( ! prereqActivity.getStatus().equals(Status.FINISHED)){
+			if(! originalActivity.getStatus().equals(Status.LOCKED)){
+				JOptionPane.showMessageDialog(null, originalActivity + " is now Locked because " + prereqActivity + " is not Finished");
+				actPanel.setStatus(Status.LOCKED);
 				originalActivity.setStatus(Status.LOCKED);
-				JOptionPane.showMessageDialog(null, "Activity is now Locked");
 			}
-			else {
+		} else {
+			if(! originalActivity.getStatus().equals(Status.LOCKED) ){
+				if(mainModel.isPrereqDone(originalActivity)){
+					JOptionPane.showMessageDialog(null, originalActivity + " is now Locked because prerequisites are not Finished");
+					actPanel.setStatus(Status.LOCKED);
+					originalActivity.setStatus(Status.LOCKED);
+				}
+			} else {
+				JOptionPane.showMessageDialog(null, "All prerequisites are finished, " + originalActivity + " is ready to start ");
+				actPanel.setStatus(Status.UNLOCKED);
 				originalActivity.setStatus(Status.UNLOCKED);
-				JOptionPane.showMessageDialog(null, "Activity is ready ");
 			}
-			return true;
 		}
 	}
 	
 	// registers all listeners
 	public void registerListeners(){
-
 		mainView.getLoginPage().addLoginListener(new LoginListener());
 		mainView.getLoginPage().addRegisterBtnListener(new RegisterBtnListener());
 		mainView.getLoginPage().getSignupFrame().addSignupListener(new SignupListener());
@@ -1183,7 +1124,6 @@ public class MainController {
 	
 	// disable manager capabilities for a team member login
 	public void disableManagerFeatures(){
-		
 		mainView.getNewProjectItem().setEnabled(false);
 		mainView.getJobsTabbedPane().setEnabledAt(1, false);
 		mainView.getJobsTabbedPane().setEnabledAt(2, false);
@@ -1194,16 +1134,21 @@ public class MainController {
 		projPanel.getDeleteBtn().setVisible(false);
 		actPanel.getDeleteBtn().setVisible(false);
 		projPanel.getNewActivityBtn().setVisible(false);
-		
 		actPanel.getMemberBtn().setText("Show Assigned Members");
-		
 		DefaultTreeModel model = mainView.getTreePanel().getModelTree();
 		DefaultMutableTreeNode root = ((DefaultMutableTreeNode) model.getRoot());
 		root.setUserObject("Member Tasks");
 		model.nodeChanged(root);
-		
 		actPanel.getPrereqBtn().setVisible(false);
 		mainView.getTheMenuBar().setVisible(false);
+	}
+	
+	public void disableSelecion(boolean bol){
+		projCombo.setEnabled(bol);
+		mainView.getTreePanel().getTree().setEnabled(bol);
+		mainView.getTablePanel().getTable().setEnabled(bol);
+		actCombo.setEnabled(bol);
+		mainView.getTheMenuBar().getMenu(0).setEnabled(bol);
 	}
 	
 	public void clearSelections(){
@@ -1221,35 +1166,26 @@ public class MainController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		JOptionPane.showMessageDialog(null, "Project created sucessfully");
 		// update member(manager) projects
 		allMemberProjects.add(selectedProject);
-		
 		// update table
 		mainView.getTablePanel().getTableModel().setData(allMemberProjects);
 		mainView.getTablePanel().refreshTable();
-		
 		// update projects Combo
 		projCombo.addItem(selectedProject);
-		
 		// update tree
 		mainView.getTreePanel().getTreeRoot().add(new DefaultMutableTreeNode(selectedProject));
 		mainView.getTreePanel().reloadTree();
-		
 		// update report
 		refreshReport();
-		
 		// select the new Project in Project Combo
 		projCombo.setSelectedItem(selectedProject);
-		
-		JOptionPane.showMessageDialog(null, "Project created sucessfully");
-		
 		projPanel.getSaveBtn().setText("Edit");
 		projPanel.getDeleteBtn().setText("Delete");
-		
 		projPanel.getDeleteBtn().setEnabled(true);
 		projPanel.getNewActivityBtn().setEnabled(false);
 		mainView.getNewProjectItem().setEnabled(true);
-
 		projPanel.setEnabled(true);
 		projPanel.enableFieldsEdit(false);
 		projCombo.setEnabled(true);
@@ -1258,7 +1194,8 @@ public class MainController {
 	}
 	
 	public void removeProjectEvent(Project deletedProj){	
-		
+		int reply = JOptionPane.showConfirmDialog(null, "Confirm Delete", "Choose one", JOptionPane.YES_NO_OPTION);
+		if(reply == JOptionPane.NO_OPTION) {return;}
 		try {
 			mainModel.deleteProjectfromDb(deletedProj.getID());
 		} catch (Exception e) {
@@ -1266,67 +1203,59 @@ public class MainController {
 		}	
 		clearSelections();
 		// to unlink activities with a deleted project
-		linkAll();
-		
+		allMemberProjects.remove(deletedProj);
 		// update table
 		mainView.getTablePanel().getTableModel().setData(allMemberProjects);
 		mainView.getTablePanel().refreshTable();
-		
 		// update projects Combo
 		projCombo.removeItem(deletedProj);
-				
 		// update tree
 		DefaultMutableTreeNode deletedNode = mainView.getTreePanel().searchNode(deletedProj);
 		mainView.getTreePanel().getModelTree().removeNodeFromParent(deletedNode);	
-		
-		JOptionPane.showMessageDialog(null, "Project deleted sucessfully");
+		//refresh report
+		refreshReport();
 	}
 
 	public void addActivityEvent(Activity newAct) {
-		
 		try {
 			mainModel.addActivityToDb(newAct);
 			selectedActivity = mainModel.getLastActivity();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+		JOptionPane.showMessageDialog(null, "Activity created sucessfully");
 		linkAll();
 		// update activities combo
 		actCombo.addItem(selectedActivity);
-		
 		// update tree
 		DefaultMutableTreeNode newActNode = new DefaultMutableTreeNode(selectedActivity);
 		DefaultMutableTreeNode node =  (DefaultMutableTreeNode) mainView.getTreePanel().getTree().getLastSelectedPathComponent();
 		node.add(newActNode);
 		mainView.getTreePanel().reloadTree();
 		actCombo.setSelectedItem(selectedActivity);
-		JOptionPane.showMessageDialog(null, "Activity created sucessfully");
-		
 		actPanel.getSaveBtn().setText("Edit");
 		actPanel.getDeleteBtn().setText("Delete");
 		actPanel.getSaveBtn().setEnabled(true);
 		actPanel.getDeleteBtn().setEnabled(true);
 		actPanel.enableFieldsEdit(false);
-		
 		projPanel.getDeleteBtn().setText("Delete");
 		projPanel.getSaveBtn().setEnabled(true);
 		projPanel.getDeleteBtn().setEnabled(true);
 		projPanel.enableFieldsEdit(false);
-		
 		mainView.getJobsTabbedPane().setEnabledAt(1, true);
 		mainView.getJobsTabbedPane().setEnabledAt(2, true);
 		mainView.getJobsTabbedPane().setSelectedIndex(2);
+		disableSelecion(true);
 	}
 
 	public void deleteActivityEvent(Activity deletedAct) {
-		
+		int reply = JOptionPane.showConfirmDialog(null, "Confirm Delete", "Choose one", JOptionPane.YES_NO_OPTION);
+		if(reply == JOptionPane.NO_OPTION) {return;}
 		try {
 			mainModel.deleteActivityfromDb(deletedAct.getID());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		JOptionPane.showMessageDialog(null, "Activity deleted sucessfully");
 		actCombo.removeItem(deletedAct);
 		linkAll();
 		DefaultMutableTreeNode deletedNode = mainView.getTreePanel().searchNode(deletedAct);
@@ -1334,7 +1263,6 @@ public class MainController {
 	}
 	
 	private Project getProjectValues(){
-
 		String name = projPanel.getName();
 		String description = projPanel.getDescription();
 		double budget = projPanel.getBudget();
@@ -1359,7 +1287,6 @@ public class MainController {
 		Status status = actPanel.getStatus();
 		int pID = selectedProject.getID();
 		Activity updatedActivity = null;
-		
 		try {
 			updatedActivity = new Activity(pID, name, description, budget, startDate, finishDate, status);
 		} catch (Exception e) {

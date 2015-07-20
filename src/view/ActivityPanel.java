@@ -1,5 +1,8 @@
 package view;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 
@@ -27,14 +30,19 @@ public class ActivityPanel extends JobPanel{
 		////// Row 7 //////
 		setRow(1, 6);
 		prereqBtn = new JButton("ADD / REMOVE Prerequisite ");
-		add(prereqBtn, gc);
+		prereqBtn.setPreferredSize(new Dimension(220, 40));
+		prereqBtn.setForeground(Color.BLUE);
+		prereqBtn.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		add(prereqBtn, getGc());
 
-		
 		//laying out MemberTeam components
 		////// Row 8 //////
 		setRow(1, 7);
 		memberBtn = new JButton("ADD / REMOVE Member");
-		add(memberBtn, gc);
+		memberBtn.setPreferredSize(new Dimension(220, 40));
+		memberBtn.setForeground(Color.getHSBColor(1.85f, 0.9f, 0.9f));
+		memberBtn.setFont(new Font("Times New Roman", Font.BOLD, 16));
+		add(memberBtn, getGc());
 
 	}
 
@@ -45,7 +53,6 @@ public class ActivityPanel extends JobPanel{
 	}
 
 	public void addDeleteListener(ActionListener listener) {
-		// TODO Auto-generated method stub
 		getDeleteBtn().addActionListener(listener);
 	}
 	
@@ -63,9 +70,7 @@ public class ActivityPanel extends JobPanel{
 	}
 	
 	public void addProjectActivitiesComboListener(ItemListener aListener) {
-		
 		// TODO Auto-generated method stub
-		
 	}
 	////////////////////////////////////////////////////////////////	Getters and Setters	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 

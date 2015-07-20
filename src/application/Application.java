@@ -8,7 +8,6 @@ import controller.MainController;
 
 public class Application {
 
-
 	public static void main(String[] args) {
 		
 		SwingUtilities.invokeLater(new Runnable(){
@@ -26,9 +25,7 @@ public class Application {
 				MainView mainView = new MainView(mainModel);
 				
 				MainController mainController = new MainController(mainModel, mainView);
-			
 			}	
 		});
 	}
-
 }

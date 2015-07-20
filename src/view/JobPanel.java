@@ -63,9 +63,9 @@ public abstract class JobPanel extends JPanel{
 
 		// Form dimensions
 		Dimension dim = getPreferredSize();
-		dim.width = 400;
+		dim.width = 420;
 		setPreferredSize(dim);
-		
+
 		// creating Name text field
 		nameFld = new JTextField(15);
 		nameFld.setFont(new Font("Serif Bold", Font.BOLD, 16));
@@ -104,6 +104,7 @@ public abstract class JobPanel extends JPanel{
 		
 		// combo box to show status
 		statusCombo = new JComboBox<String>();
+		statusCombo.setPreferredSize(new Dimension(200, 30));
 		statusCombo.setFont(new Font("Serif Bold", Font.BOLD, 18));
 		statusCombo.setEditable(false);
 		statusCombo.setBorder(BorderFactory.createLineBorder(Color.GRAY));
@@ -129,7 +130,6 @@ public abstract class JobPanel extends JPanel{
 				
 		// setting form components
 		layoutComponents();
-		
 	}
 	
 	// sets labels and text fields for each row (line) inside the JobForm
@@ -280,13 +280,12 @@ public abstract class JobPanel extends JPanel{
 	public void setFinishDate(String finishDate){
 			
 		Calendar cal = Calendar.getInstance();
-		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US);
+		SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.CANADA);
 		try {
 			cal.setTime(sdf.parse(finishDate));
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}// all done
+		}
 		int year = cal.get(Calendar.YEAR);
 		int month = cal.get(Calendar.MONTH);
 		int day = cal.get(Calendar.DAY_OF_MONTH);
@@ -404,9 +403,7 @@ public abstract class JobPanel extends JPanel{
 	
 	// helper private class to implement Date Picker
 	public class DateLabelFormatter extends AbstractFormatter {	
-	    /**
-		 * 
-		 */
+
 		private static final long serialVersionUID = 1L;
 	    private SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.CANADA);
 
@@ -414,25 +411,21 @@ public abstract class JobPanel extends JPanel{
 	    public Object stringToValue(String text) throws ParseException {
 	        return dateFormatter.parseObject(text);
 	    }
-
 	    @Override
 	    public String valueToString(Object value) throws ParseException {
 	        if (value != null) {
 	            Calendar cal = (Calendar) value;
 	            return dateFormatter.format(cal.getTime());
 	        }
-
 	        return "";
 	    }
 	}
 
 	public AbstractButton getPrereqBtn() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public AbstractButton getMemberBtn() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

@@ -53,15 +53,12 @@ public class TreePanel extends JPanel {
 		modelTree = new DefaultTreeModel(treeRoot);
 		viewTree = new JTree(modelTree);
 		viewTree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-	
 		// Tree Border
 		viewTree.setBorder(BorderFactory.createLoweredBevelBorder());
 		viewTree.setExpandsSelectedPaths(true);
 		
 		// Tree BackGround Colour
 		viewTree.setBackground(Color.getHSBColor(0.1f, 0.3f, 0.9f));
-
-		viewTree.setMinimumSize(new Dimension(250,250));
 
 		// Fonts
 		viewTree.setFont(new Font("Arial Black", Font.BOLD, 18));
@@ -77,7 +74,6 @@ public class TreePanel extends JPanel {
 			viewTree.expandRow(i);
 		}
 		*/
-		
 		add(viewTree);
 	}
 	

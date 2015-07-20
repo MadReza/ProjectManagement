@@ -77,7 +77,7 @@ public class MainView extends JFrame {
 	public MainView(MainModel mModel){
 		
 		// MainFrame setup (title, layout, dimensions)
-		super("Project Manager Space");							// calls super constructor in JFrame and assigning our Apps title
+		super("My Project Manager");							// calls super constructor in JFrame and assigning our Apps title
 		
 		mainModel = mModel ;
 		
@@ -173,7 +173,7 @@ public class MainView extends JFrame {
 		newMenu.addSeparator();										// separates "Project" part from "exit" part
 		newMenu.add(exitItem);										// adds "Exit" menu item to "New" menu 
 		
-		gantItem = new JMenuItem("      GANT       ");
+		gantItem = new JMenuItem("      GANTT     ");
 		gantItem.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		chartMenu.add(gantItem);
 		
@@ -214,7 +214,7 @@ public class MainView extends JFrame {
 		
 		existingProjectsCombo = new JComboBox<Project>();
 		existingProjectsCombo.insertItemAt(null, 0);
-		existingProjectsCombo.setMinimumSize(new Dimension(30, 5));
+		existingProjectsCombo.setPreferredSize(new Dimension(250, 40));
 		existingProjectsCombo.setEditable(false);
 		existingProjectsCombo.setFont(new Font("Arial Black", Font.BOLD, 20));
 		existingProjectsCombo.setBorder(BorderFactory.createRaisedSoftBevelBorder());
@@ -290,12 +290,11 @@ public class MainView extends JFrame {
 		return mainModel;
 	}
 
-	public JobPanel getProjectPanel() {
+	public ProjectPanel getProjectPanel() {
 		return projectPanel;
 	}
 	
-	public JobPanel getActivityPanel() {
-		// TODO Auto-generated method stub
+	public ActivityPanel getActivityPanel() {
 		return activityPanel;
 	}
 

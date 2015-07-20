@@ -84,10 +84,10 @@ public class MainModel {
 		// create an activity object
 		Activity newActivity = new Activity(parentID, name, description, budget, startDate, finishDate, status);
 		
-		// check if Activity is suitable to be associated to a parent Project
+/*		// check if Activity is suitable to be associated to a parent Project
 		if(!activityBudgetSuitsParent(newActivity, parentProject)){
 			throw new Exception("Activities Total Budget will exceed parent Project");
-		}
+		}*/
 		
 		if( activityDatesSuitsParent(newActivity, parentProject) != 0 ){
 			throw new Exception("Activity Dates violates the boundaries of parent project");
@@ -148,9 +148,9 @@ public class MainModel {
 
 		//////// check if suits parent project
 		// check budget
-		if(! activityBudgetSuitsParent(updatedActivity, parentProject)){
+/*		if(! activityBudgetSuitsParent(updatedActivity, parentProject)){
 			throw new Exception("Updated activity budget doesn't suit parent project");
-		}
+		}*/
 		
 		// check dates
 		if( activityDatesSuitsParent(updatedActivity, parentProject) != 0){
@@ -213,6 +213,13 @@ public class MainModel {
 	public boolean activityBudgetSuitsParent(Activity newActivity, Project parentProject){
 		
 		// "Adjust: The Sum of a Project Activities budgets after adding activity.budget() can't exceed their parent project "
+			try {
+				parentProject.setProjectActivities(getProjectActivities(parentProject.getID()));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
 		if (parentProject.getBudget() < parentProject.getActivitiesTotalBudget() + newActivity.getBudget()){
 				return false;
 			}
@@ -259,13 +266,19 @@ public class MainModel {
 	// checks if an activity suits all its prerequisites regarding the dates
 	public boolean activityDatesSuitsAllPrereqs(Activity activity, Activity updatedActivity){
 		
-		ArrayList<Activity> allPrereq = activity.getPreReq();
-		if(!allPrereq.isEmpty()){
-			for(Activity prereqAct: allPrereq){
-				if(!activityDatesSuitsPrereq(updatedActivity, prereqAct)){
-					return false;
+		ArrayList<Activity> allPrereq;
+		try {
+			allPrereq = getActivityPreReq(activity.getID());
+			if(!allPrereq.isEmpty()){
+				for(Activity prereqAct: allPrereq){
+					if(!activityDatesSuitsPrereq(updatedActivity, prereqAct)){
+						return false;
+					}
 				}
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -274,8 +287,13 @@ public class MainModel {
 	public boolean activityDatesSuitsSuccessor(Activity activity , Activity sucActivity){
 		
 		// "Finish date can't follow its successor Start date"
-		if (activity.getFinishDate().compareTo(sucActivity.getStartDate()) > 0){
-			return false;
+		try {
+			if(sdf.parse(activity.getFinishDate()).after(sdf.parse(sucActivity.getStartDate()))){
+				return false;
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -283,18 +301,24 @@ public class MainModel {
 	// checks if an activity suits all its successors regarding the dates
 	public boolean activityDatesSuitsAllSuccessors(Activity originalActivity, Activity updatedActivity){
 
-		ArrayList<Activity> allsucs = originalActivity.getSuccessors();
-		if(!allsucs.isEmpty()){
-			for(Activity sucAct: allsucs){
-				if(!activityDatesSuitsSuccessor(updatedActivity, sucAct)){
-					return false;
+		ArrayList<Activity> allSucs;
+		try {
+			allSucs = getActivitySuccessors(originalActivity.getID());
+			if(!allSucs.isEmpty()){
+				for(Activity sucAct: allSucs){
+					if(!activityDatesSuitsSuccessor(updatedActivity, sucAct)){
+						return false;
+					}
 				}
 			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		return true;
 	}
 	
-	// checks if prerequisites are done         use where ??????????????????
+	// checks if prerequisites are done
 	public boolean isPrereqDone(Activity activity){
 
 		ArrayList<Activity> prereqActivities = activity.getPreReq();
@@ -384,7 +408,6 @@ public class MainModel {
 	public ArrayList<Activity> getAllActivities() throws Exception {
 		return database.getAllActivities();
 	}
-
 
 	// returns last added Project
 	public Project getLastProject() throws Exception {
@@ -498,6 +521,7 @@ public class MainModel {
 	}
 	
 	////////////// added for testing 
+	
 	public Member getLastMember() throws SQLException {
 		Member member = database.getLastMember();
 		return member;

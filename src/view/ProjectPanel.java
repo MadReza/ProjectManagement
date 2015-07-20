@@ -37,14 +37,14 @@ public class ProjectPanel extends JobPanel{
 		projectActivitiesCombo = new JComboBox<Activity>();
 		projectActivitiesCombo.setFont(new Font("Serif Bold", Font.BOLD, 18));
 		projectActivitiesCombo.insertItemAt(null, 0);
-		projectActivitiesCombo.setMinimumSize(new Dimension(30, 5));
+		projectActivitiesCombo.setPreferredSize(new Dimension(200, 40));
 		projectActivitiesCombo.setEditable(false);
 		projectActivitiesCombo.setBorder(BorderFactory.createRaisedSoftBevelBorder());
 		
 		// Laying out projectActivitiesCombo
 		////// Row 7 //////
 		setRow(0, 6);
-		add(new JLabel("Project Activities"), getGc());
+		add(new JLabel("Activities"), getGc());
 		
 		setRow(1, 6);
 		add(projectActivitiesCombo, getGc());

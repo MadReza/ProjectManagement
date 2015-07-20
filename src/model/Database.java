@@ -349,9 +349,10 @@ public class Database{
 		String aQuery = " SELECT * FROM Members WHERE Username = '" + username + "' AND Password = '" + password + "' ;" ; 
 		ResultSet resultSet = null;
 		resultSet = dbStatement.executeQuery(aQuery);
-		Member member = new Member(username, password); ;
+		Member member = null;
 		
 		while (resultSet.next()) {
+			member = new Member(username, password);
 			int id = resultSet.getInt("UserID");
 			int isManager = resultSet.getInt("Manager");
 			member.setUserID(id);
@@ -396,7 +397,6 @@ public class Database{
 
 		boolean result = prepStatement.execute();
 
-		System.out.println("Result set for member insertion = " + result);
 		return !result;
 		}
 	 
@@ -493,7 +493,7 @@ public class Database{
 	 
 	 protected Member getLastMember() throws SQLException {
 
-		String aQuery =  "SELECT * FROM Members WHERE ID = (SELECT MAX(ID) FROM Members);"; 
+		String aQuery =  "SELECT * FROM Members WHERE UserID = (SELECT MAX(UserID) FROM Members);"; 
 		ResultSet resultSet = null;
 		resultSet = dbStatement.executeQuery(aQuery);
 		Member member = null;

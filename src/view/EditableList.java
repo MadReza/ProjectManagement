@@ -96,24 +96,22 @@ public class EditableList<T> extends JFrame {
 	        
 	    availableList.addListSelectionListener(new ListSelectionListener(){
 			@Override
-			public void valueChanged(ListSelectionEvent arg0) {
-				// TODO Auto-generated method stub
-				addButton.setEnabled(true);
-				removeButton.setEnabled(false);
-				assignedList.clearSelection();
-			}
-	    	
+			public void valueChanged(ListSelectionEvent ev) {
+
+					addButton.setEnabled(true);
+					removeButton.setEnabled(false);
+					assignedList.clearSelection();
+			}	
 	    });
 	    
 	    assignedList.addListSelectionListener(new ListSelectionListener(){
 			@Override
 			public void valueChanged(ListSelectionEvent arg0) {
-				// TODO Auto-generated method stub
+
 				addButton.setEnabled(false);
 				removeButton.setEnabled(true);
 				availableList.clearSelection();
 			}
-	    	
 	    });
 	    
 	  }
