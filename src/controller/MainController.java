@@ -192,6 +192,10 @@ public class MainController {
 					}
 					
 					else if(saveBtn.getText().equalsIgnoreCase("Update")){
+						if(projPanel.startInPast()){
+							int reply = JOptionPane.showConfirmDialog(null, "Warning: Start in the past !!!!", "Choose one", JOptionPane.YES_NO_OPTION);
+							if(reply == JOptionPane.NO_OPTION)	{	return; }
+						}
 						mainModel.updateProject(selectedProject, updatedProject);
 						JOptionPane.showMessageDialog(null, "Project updated sucessfully");
 						saveBtn.setText("Edit");
