@@ -237,7 +237,8 @@ public abstract class JobPanel extends JPanel{
 	}
 	
 	public Status getStatus(){
-		return switchToStatus(statusCombo.getSelectedIndex());
+
+		return switchToStatus(statusCombo.getSelectedItem().toString());
 	}
 	
 	public JButton getSaveBtn() {
@@ -304,15 +305,16 @@ public abstract class JobPanel extends JPanel{
 	////////////////////////////////////////////////////////////////	Helper Methods	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	// private method used to switch int to Enum Status
-	private Status switchToStatus(int status){
+	private Status switchToStatus(String status){
+		
 		switch(status){
-			case 0:
+			case "LOCKED":
 				return Status.LOCKED;
-			case 1:
+			case "UNLOCKED":
 				return Status.UNLOCKED;
-			case 2:
+			case "IN_PROGRESS":
 				return Status.IN_PROGRESS;
-			case 3:
+			case "FINISHED":
 				return Status.FINISHED;
 			default:
 				return Status.UNLOCKED;
@@ -430,5 +432,3 @@ public abstract class JobPanel extends JPanel{
 	}
 	
 }
-
-
