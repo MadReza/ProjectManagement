@@ -1,7 +1,6 @@
 package application;
 
 import javax.swing.SwingUtilities;
-
 import model.MainModel;
 import view.MainView;
 import controller.MainController;
@@ -22,10 +21,11 @@ public class Application {
 					e.printStackTrace();
 				}
 				
-				MainView mainView = new MainView(mainModel);
+				MainView mainView = new MainView();
 				
 				MainController mainController = new MainController(mainModel, mainView);
 			}	
 		});
 	}
 }
+
