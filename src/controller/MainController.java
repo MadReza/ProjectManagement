@@ -178,11 +178,9 @@ public class MainController {
 					// new project
 					if(saveBtn.getText().equalsIgnoreCase("Save")){
 						if(projPanel.startInPast()){
-							int reply = JOptionPane.showConfirmDialog(null, "Start in the past !!!!", "Choose one", JOptionPane.YES_NO_OPTION);
+							int reply = JOptionPane.showConfirmDialog(null, "Warning: Start in the past !!!!", "Choose one", JOptionPane.YES_NO_OPTION);
 							if(reply == JOptionPane.NO_OPTION)	{	return; }
-						} else {
 							addProjectEvent(updatedProject);
-						}
 					}
 					
 					else if(saveBtn.getText().equalsIgnoreCase("Edit")){
