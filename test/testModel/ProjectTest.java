@@ -84,7 +84,6 @@ public class ProjectTest {
 	@Test
 	public void testGetPmID() throws Exception {
 		Project project = new Project(1, "ProjectName", "ProjectDescription", 100000000.0, "Mon Jun 08 12:00:00 EDT 2015", "Mon Jun 25 12:00:00 EDT 2015", Status.LOCKED);
-		
 		assertEquals("Project ID should be 1", 1, project.getPmID());
 	}
 
