@@ -95,7 +95,7 @@ public class MainController {
 					linkAll();
 					refreshAll();
 					setInitialPosition();
-					 if( ! currentMember.isManager()){
+					 if( !currentMember.isManager()){
 							disableManagerFeatures();
 						}
 				}

@@ -32,6 +32,7 @@ public class EditableList<T> extends JFrame {
 	
 	  public EditableList(String title, ArrayList<T> availableType, ArrayList<T> assignedType) {
 	    super(title);
+	    setResizable(false);
 	    
 	    // List of Members to be assigned to an activity or List of Prereqs to be assigned to an activity
 	    availableListModel = new DefaultListModel<T>();
@@ -47,7 +48,7 @@ public class EditableList<T> extends JFrame {
 //	    availableListBox.setSize(200, 200);
 //	    availableListBox.setMinimumSize(new Dimension(150, 100));
 	    availableListBox.add(scrollListAll);
-	    availableListBox.add(new JLabel("Available Members"));
+	    availableListBox.add(new JLabel("Available"));
 
 	    // List of Team Members assigned to an activity
 	    assignedListModel = new DefaultListModel<T>();
@@ -63,7 +64,7 @@ public class EditableList<T> extends JFrame {
 	    assignedListBox.setSize(200, 200);
 	    assignedListBox.setMinimumSize(new Dimension(150, 100));
 	    assignedListBox.add(scrollListTeam);
-	    assignedListBox.add(new JLabel("Assigned Members"));
+	    assignedListBox.add(new JLabel("Existing"));
 	    
 	    // Lists Separator and Buttons
 	    Box separatorBox = new Box(BoxLayout.Y_AXIS);
