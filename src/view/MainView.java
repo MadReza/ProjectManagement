@@ -1,3 +1,4 @@
+
 package view;
 
 import java.awt.BorderLayout;
@@ -35,11 +36,6 @@ import javax.swing.JSeparator;
 @SuppressWarnings("serial")
 public class MainView extends JFrame {
 	
-	// Model reference
-	private MainModel mainModel;
-	
-	// Controller reference
-	private MainController mainController;	
 	
 	// LoginArea
 	private Login loginPage;
@@ -79,13 +75,11 @@ public class MainView extends JFrame {
 	private JSeparator separator_1;
 	
 	// MainFram default constructor
-	public MainView(MainModel mModel){
+	public MainView(){
 		
 		// MainFrame setup (title, layout, dimensions)
 		super("My Project Manager");							// calls super constructor in JFrame and assigning our Apps title
-		
-		mainModel = mModel ;
-		
+				
 		loginPage = new Login();
 
 		// layout
@@ -302,10 +296,6 @@ public class MainView extends JFrame {
 
 	public JobPanel getJobPanel() {
 		return jobPanel;
-	}
-
-	public MainModel getMainModel(){
-		return mainModel;
 	}
 
 	public ProjectPanel getProjectPanel() {
