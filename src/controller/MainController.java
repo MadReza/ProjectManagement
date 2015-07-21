@@ -91,11 +91,12 @@ public class MainController {
 				} else {
 					currentMember = member;
 					mainView.getLoginPage().setVisible(false);
-					mainView.setVisible(true);
+					
 					linkAll();
 					refreshAll();
 					setInitialPosition();
-					 if( !currentMember.isManager()){
+					mainView.setVisible(true);
+					 if( ! currentMember.isManager()){
 							disableManagerFeatures();
 						}
 				}
@@ -112,6 +113,7 @@ public class MainController {
 			mainView.getLoginPage().getSignupFrame().setVisible(true);
 		}
 	}
+	
 
 	// inner class to implement sign up a new member or project manager
 	private class SignupListener implements ActionListener {
@@ -133,7 +135,11 @@ public class MainController {
 					if(role == 0){
 						disableManagerFeatures();
 					}
+					currentMember = mainModel.getLastMember();
+					linkAll();
+					refreshAll();
 					mainView.setVisible(true);
+		
 					//mainView.getLoginPage().setVisible(true);
 				} catch (SQLException e) {
 					if(e.getMessage().contains("UNIQUE")) {
@@ -143,13 +149,7 @@ public class MainController {
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(null, "Error : Member Account was not created! try again.");
 					mainView.getLoginPage().getSignupFrame().clearSignupForm();
-				}
-				try {
-					currentMember = mainModel.getLastMember();
-				} catch (SQLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				} 
 			}
 		} 				
 	}
@@ -738,6 +738,14 @@ public class MainController {
 		}
 	}
 	
+	// inner class to implement logoutItemListener
+	private class LogoutItemListener implements ActionListener {
+		public void actionPerformed(ActionEvent arg0) {
+			mainView.dispose();
+			mainView.getLoginPage().setVisible(true);
+		}
+	}
+	
 	// implements exit menu item in the menu bar
 	private class ExitItemListener implements ActionListener {
 		@Override
@@ -1117,6 +1125,7 @@ public class MainController {
 		actPanel.addMemberButtonListener(new MemberListener());
 		projPanel.addNewActivityBtnListener(new NewActivityBtnListener());
 		mainView.addNewProjectItemListener(new NewProjectItemListener());
+		mainView.addLogoutItemListener(new LogoutItemListener());
 		mainView.addExitItemListener(new ExitItemListener());
 		mainView.getTablePanel().addListSelectionListener(new tableRowSelectionListener());
 		mainView.addGantItemListener(new GantItemListener());

@@ -29,6 +29,8 @@ import controller.MainController;
 
 import model.MainModel;
 import model.Project;
+import javax.swing.JButton;
+import javax.swing.JSeparator;
 
 @SuppressWarnings("serial")
 public class MainView extends JFrame {
@@ -61,7 +63,7 @@ public class MainView extends JFrame {
 	private ReportPanel reportPanel;
 	
 	// JMenuItems
-	JMenuItem newProjectItem , exitItem , gantItem, criticalItem, pertItem, earnedItem;
+	JMenuItem newProjectItem , logoutItem,  exitItem , gantItem, criticalItem, pertItem, earnedItem;
 
 	// Layout Manager
 	BorderLayout borderLayout;
@@ -72,6 +74,9 @@ public class MainView extends JFrame {
 	
 	// Table Panel
 	TablePanel tablePanel;
+	private JMenuItem mntmNewMenuItem;
+	private JSeparator separator;
+	private JSeparator separator_1;
 	
 	// MainFram default constructor
 	public MainView(MainModel mModel){
@@ -85,7 +90,7 @@ public class MainView extends JFrame {
 
 		// layout
 		borderLayout = new BorderLayout();
-		setLayout(borderLayout);								// divides the Main Frame into 5 regions NORTH, SOUTH, EAST, WEST and CENTER
+		getContentPane().setLayout(borderLayout);								// divides the Main Frame into 5 regions NORTH, SOUTH, EAST, WEST and CENTER
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);			// the application doesn't exit on closing by default
 		
 		addWindowListener(new WindowAdapter() {
@@ -112,13 +117,13 @@ public class MainView extends JFrame {
 		
 		// ToolBar
 		toolbar = createToolBar();
-		add(toolbar, BorderLayout.NORTH);
+		getContentPane().add(toolbar, BorderLayout.NORTH);
 		
 		// creates and sets Jobs panels
 		jobsTabbedPane = new JTabbedPane();
 		jobsTabbedPane.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		jobsTabbedPane.setBackground(Color.yellow);
-		add(jobsTabbedPane, BorderLayout.EAST);
+		getContentPane().add(jobsTabbedPane, BorderLayout.EAST);
 
 		// report panel
 		reportPanel = new ReportPanel();
@@ -137,11 +142,11 @@ public class MainView extends JFrame {
 		projectsTree.setBackground(Color.getHSBColor(1.57f, 0.6f, 0.8f));
 		treePane = new JScrollPane(projectsTree);
 		treePane.setViewportBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		add(treePane, BorderLayout.WEST);
+		getContentPane().add(treePane, BorderLayout.WEST);
 		
 		// Table Panel to display Data
 		tablePanel = new TablePanel();
-		add(tablePanel, BorderLayout.CENTER);
+		getContentPane().add(tablePanel, BorderLayout.CENTER);
 	}
 	
 	////////////////////////////////////////////////////////////////	Helper Methods	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -153,26 +158,35 @@ public class MainView extends JFrame {
 		menuBar.setBackground(Color.getHSBColor(1.57f, 0.6f, 0.8f));
 		menuBar.setBorder(BorderFactory.createLineBorder(Color.orange, 4));
 		
-		JMenu newMenu = new JMenu("      New     ");							// creates a menu called "New"
-		newMenu.setFont(new Font("Arial Black", Font.BOLD, 22));
+		JMenu optionsMenu = new JMenu("   Options  ");							// creates a menu called "New"
+		optionsMenu.setFont(new Font("Arial Black", Font.BOLD, 22));
 		
-		
-		JMenu chartMenu = new JMenu("    Charts  ");							// creates a menu called "Charts"
+		JMenu chartMenu = new JMenu("   Charts  ");							// creates a menu called "Charts"
 		chartMenu.setFont(new Font("Arial Black", Font.BOLD, 22));
 		
 		JMenu analysisMenu = new JMenu("    Analysis   ");							// creates a menu called "Analysis"
 		analysisMenu.setFont(new Font("Arial Black", Font.BOLD, 22));
 		
-		newProjectItem = new JMenuItem("      Project ");    				// creates a "Project" menu item to be added to "New" menu
+		newProjectItem = new JMenuItem("     New Project ");    				// creates a "Project" menu item to be added to "New" menu
 		newProjectItem.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		
+		optionsMenu.add(newProjectItem);								// adds "Project" item to "New" menu
+		optionsMenu.addSeparator();										// separates "Project" part from "exit" part
+		
+		separator = new JSeparator();
+		optionsMenu.add(separator);
+				
+		logoutItem = new JMenuItem("      Logout");
+		logoutItem.setFont(new Font("Times New Roman", Font.BOLD, 20));
+		optionsMenu.add(logoutItem);
+		
+		separator_1 = new JSeparator();
+		optionsMenu.add(separator_1);
 		
 		exitItem = new JMenuItem("      Exit  ");							// creates an "Exit" menu item to be added to "New" menu
 		exitItem.setFont(new Font("Times New Roman", Font.BOLD, 20));
-		
-		newMenu.add(newProjectItem);								// adds "Project" item to "New" menu
-		newMenu.addSeparator();										// separates "Project" part from "exit" part
-		newMenu.add(exitItem);										// adds "Exit" menu item to "New" menu 
-		
+		optionsMenu.add(exitItem);
+				
 		gantItem = new JMenuItem("      GANTT     ");
 		gantItem.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		chartMenu.add(gantItem);
@@ -189,7 +203,7 @@ public class MainView extends JFrame {
 		earnedItem.setFont(new Font("Times New Roman", Font.BOLD, 20));
 		analysisMenu.add(earnedItem);
 		
-		newMenu.setMnemonic(KeyEvent.VK_N);							// ALT + N  opens "New" inside menuBar
+		optionsMenu.setMnemonic(KeyEvent.VK_N);							// ALT + N  opens "New" inside menuBar
 		chartMenu.setMnemonic(KeyEvent.VK_C);						// ALT + C  opens "Charts" inside menuBar
 		analysisMenu.setMnemonic(KeyEvent.VK_A);					// ALT + A  opens "Analysis" inside menuBar
 		
@@ -198,9 +212,9 @@ public class MainView extends JFrame {
 		exitItem.setMnemonic(KeyEvent.VK_X);						// ALT + X  invokes exit inside "New" and exits the Apps
 		exitItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X, ActionEvent.CTRL_MASK));							// CTRL + X exits 
 		
-		menuBar.add(newMenu);										// adds "New" menu to the menuBar
+		menuBar.add(optionsMenu);										// adds "New" menu to the menuBar
 		menuBar.add(chartMenu);										// adds "Charts" menu to the menuBar
-		menuBar.add(analysisMenu);									// adds "Analysis" menu to the menuBar
+		menuBar.add(analysisMenu);
 		
 		return menuBar;
 	}
@@ -247,6 +261,10 @@ public class MainView extends JFrame {
 		newProjectItem.addActionListener(aListener);
 	}
 	
+	public void addLogoutItemListener(ActionListener aListener){
+		logoutItem.addActionListener(aListener);
+	}
+		
 	public void addExitItemListener(ActionListener aListener){
 		exitItem.addActionListener(aListener);
 	}
