@@ -54,6 +54,14 @@ public class Project extends Job{
 		return total;
 	}
 
+	public Activity getActivityByName(Project p, String name){
+		ArrayList<Activity> activities = p.getProjectActivities();
+		for(Activity x : activities){
+			if(x.getName().equals(name))
+				return x;
+		}
+		return null;
+	}
 	/**
 	 * @return the pmID
 	 */

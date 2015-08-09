@@ -5,12 +5,19 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.border.Border;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
+import view.JobPanel.DateLabelFormatter;
 import model.Activity;
 
 @SuppressWarnings("serial")
@@ -26,7 +33,7 @@ public class ActivityPanel extends JobPanel{
 		Border outerBorder = BorderFactory.createEmptyBorder(15, 15, 15, 15);
 		setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder)); 
 		
-		//laying out prerequisites components
+		//laying out prerequisites components //TODO: Original one.
 		////// Row 7 //////
 		setRow(1, 6);
 		prereqBtn = new JButton("ADD / REMOVE Prerequisite ");

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -24,6 +25,7 @@ import model.MainModel;
 import model.Member;
 import model.Project;
 import model.Status;
+import model.criticalPath;
 
 import org.jfree.ui.RefineryUtilities;
 
@@ -32,6 +34,8 @@ import view.EditableList;
 import view.GantView;
 import view.MainView;
 import view.MemberListView;
+import view.PertView;
+import view.PertViewFrame;
 import view.ProjectPanel;
 
 // Handles the interaction between the View and the Model
@@ -795,6 +799,71 @@ public class MainController {
 		}
 	}
 	
+	//Implements Pert View 
+	private class PertItemListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+				if (selectedProject == null)
+				{
+					JOptionPane.showMessageDialog(null, "Please select a Project ");
+					return;
+				}
+				
+				ArrayList<Activity> projectActs = mainModel.getProjectActivities(selectedProject.getID());
+				selectedProject.setProjectActivities(projectActs);
+				for(Activity act : selectedProject.getProjectActivities())
+				{
+					act.setPreReq(mainModel.getActivityPreReq(act.getID()));
+					act.setSuccessors(mainModel.getActivitySuccessors(act.getID()));
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			/*PertView pertView = new PertView(selectedProject.getName() +  " PERT Analysis", selectedProject);
+	        RefineryUtilities.centerFrameOnScreen(pertView);
+			pertView.setSize(400, 320);
+			pertView.setVisible(true);*/
+			PertViewFrame pertView = new PertViewFrame(selectedProject.getName() +  " PERT Analysis", selectedProject);
+			RefineryUtilities.centerFrameOnScreen(pertView);
+			pertView.setSize(600, 600);
+			pertView.setVisible(true);
+		}
+	}
+	private class CriticalPathListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			try {
+				if (selectedProject == null)
+				{
+					JOptionPane.showMessageDialog(null, "Please select a Project ");
+					return;
+				}
+				
+				
+				ArrayList<Activity> projectActs = mainModel.getProjectActivities(selectedProject.getID());
+				selectedProject.setProjectActivities(projectActs);
+				
+				for(Activity act : selectedProject.getProjectActivities()){
+					act.setPreReq(mainModel.getActivityPreReq(act.getID()));
+					act.setSuccessors(mainModel.getActivitySuccessors(act.getID()));
+				}
+				
+				
+				criticalPath criticalpath = new criticalPath();
+				criticalpath.printAllCriticalPaths(selectedProject);
+				//ArrayList<Activity> projectActs = selectedProject.getProjectActivities();
+				
+				
+				
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+		}
+	}
+	
+	
 	/////////////////////////////////////////////////////////// Helper Methods \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	// checks if the project / activity form fields are suitable for creating project / activity
@@ -1132,6 +1201,8 @@ public class MainController {
 		mainView.addExitItemListener(new ExitItemListener());
 		mainView.getTablePanel().addListSelectionListener(new tableRowSelectionListener());
 		mainView.addGantItemListener(new GantItemListener());
+		mainView.addPertItemListener(new PertItemListener());
+		mainView.addCriticalPathListener(new CriticalPathListener());
 	}
 	
 	// disable manager capabilities for a team member login

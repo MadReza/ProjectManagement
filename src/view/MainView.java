@@ -266,7 +266,13 @@ public class MainView extends JFrame {
 	public void addGantItemListener(ActionListener aListener){
 		gantItem.addActionListener(aListener);
 	}
-
+	
+	public void addPertItemListener(ActionListener aListener){
+		pertItem.addActionListener(aListener);
+	}
+	public void addCriticalPathListener(ActionListener aListener){
+		criticalItem.addActionListener(aListener);
+	}
 	////////////////////////////////////////////////////////////////	Getters and Setters	\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 	
 	public JComboBox<Project> getExistingProjectsCombo() {

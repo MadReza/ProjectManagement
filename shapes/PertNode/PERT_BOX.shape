@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns="http://www.daa.com.au/~james/dia-shape-ns" xmlns:svg="http://www.w3.org/2000/svg">
+  <name>Desktop - PERT_BOX</name>
+  <icon>PERT_BOX.png</icon>
+  <connections>
+    <point x="4.3501" y="7.7875"/>
+    <point x="13.1501" y="14.0375"/>
+    <point x="4.3501" y="14.0375"/>
+    <point x="4.3501" y="10.9125"/>
+    <point x="13.1501" y="7.7875"/>
+    <point x="13.1501" y="10.9125"/>
+    <point x="8.7501" y="14.0375"/>
+    <point x="8.7501" y="7.7875"/>
+    <point x="4.3501" y="10.9125"/>
+    <point x="13.1501" y="10.9125"/>
+    <point x="8.7501" y="10.9125"/>
+    <point x="8.7501" y="7.7875"/>
+    <point x="8.7501" y="14.0375"/>
+    <point x="8.7501" y="10.9125"/>
+  </connections>
+  <aspectratio type="fixed"/>
+  <svg:svg>
+    <svg:rect style="fill: #ffffff" x="4.3501" y="7.7875" width="8.8" height="6.25"/>
+    <svg:rect style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x="4.3501" y="7.7875" width="8.8" height="6.25"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="4.3501" y1="10.9125" x2="13.1501" y2="10.9125"/>
+    <svg:line style="fill: none; fill-opacity:0; stroke-width: 0.1; stroke: #000000" x1="8.7501" y1="7.7875" x2="8.7501" y2="14.0375"/>
+  </svg:svg>
+</shape>

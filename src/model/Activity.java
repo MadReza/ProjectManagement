@@ -3,9 +3,10 @@ package model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
-public class Activity extends Job{
+public class Activity extends Job implements Comparable{
 
 	private int parentProjectID;
 	private ArrayList <Activity> preReq;			// list of prerequisite activities
@@ -117,6 +118,29 @@ public class Activity extends Job{
 	    Activity otherActivity = (Activity)other;
 	    if (this.getID() == otherActivity.getID()) return true;
 		return false;
+	}
+
+
+	@Override
+	public int compareTo(Object obj) {
+		// TODO Auto-generated method stub
+		Activity objAct = (Activity)obj;
+		Date thisDate = new Date();
+		Date objDate = new Date();
+		
+		try {
+			thisDate = sdf.parse(this.getStartDate());
+			objDate = sdf.parse(objAct.getStartDate());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(thisDate.before(objDate))
+			return -1;
+		if(thisDate.after(objDate))
+			return 1;
+		return 0;
 	}
 		
 	/*	
