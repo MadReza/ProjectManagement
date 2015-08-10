@@ -60,6 +60,7 @@ public class MainController {
 	private JComboBox<Activity> actCombo ;
 	private ProjectPanel projPanel;
 	private ActivityPanel actPanel;
+
 	
 	// Default Constructor for Main Controller
 	public MainController(MainModel aModel, MainView aView){
@@ -824,9 +825,11 @@ public class MainController {
 	        RefineryUtilities.centerFrameOnScreen(pertView);
 			pertView.setSize(400, 320);
 			pertView.setVisible(true);*/
-			PertViewFrame pertView = new PertViewFrame(selectedProject.getName() +  " PERT Analysis", selectedProject);
+			int width = 800;
+			int height = 700;
+			PertViewFrame pertView = new PertViewFrame(selectedProject.getName() +  " PERT Analysis", selectedProject, width, height);
 			RefineryUtilities.centerFrameOnScreen(pertView);
-			pertView.setSize(600, 600);
+			pertView.setSize(width, height);
 			pertView.setVisible(true);
 		}
 	}
@@ -1203,6 +1206,7 @@ public class MainController {
 		mainView.addGantItemListener(new GantItemListener());
 		mainView.addPertItemListener(new PertItemListener());
 		mainView.addCriticalPathListener(new CriticalPathListener());
+
 	}
 	
 	// disable manager capabilities for a team member login

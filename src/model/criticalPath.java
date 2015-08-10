@@ -6,6 +6,10 @@ import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
+
+import javax.swing.JOptionPane;
+
+import view.criticalPathView;
 public class criticalPath {
 
 	
@@ -41,7 +45,13 @@ public class criticalPath {
 			i++;
 		}
 		
-		//print it with gui here 
+		if(criticalpaths.size() == 0)
+			JOptionPane.showMessageDialog(null, "The project you selected doesn't have a critical path");
+		else{
+			criticalPathView criticalView = new criticalPathView(criticalpaths);
+			criticalView.setVisible(true);
+			criticalView.setSize(500,500);
+		}//print it with gui here 
 		
 		
 		

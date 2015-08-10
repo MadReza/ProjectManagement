@@ -331,4 +331,9 @@ public class PertView{
 	{
 		return graphComponent;
 	}
+	
+	public ArrayList<PertNode> getNodes()
+	{
+		return eventNodes;
+	}
 }
